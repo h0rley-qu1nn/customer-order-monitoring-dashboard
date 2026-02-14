@@ -1,0 +1,3251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- FIX: Added proper viewport meta tag for mobile responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FashionFlow Pro - NEON OCEAN · Seller & Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* ===== NEON OCEAN AESTHETIC WITH BACKGROUND IMAGE ===== */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Dramatic ocean background image */
+        body {
+            background-image: url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-color: #0A1B2E; /* Fallback color */
+        }
+
+        /* Dark navy overlay - makes content readable while preserving depth */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 27, 46, 0.82); /* Deep navy overlay */
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Neon atmospheric glow effects - preserved from original */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 47, 163, 0.06) 0%, transparent 35%),
+                radial-gradient(circle at 95% 70%, rgba(182, 109, 255, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 40% 80%, rgba(28, 200, 200, 0.06) 0%, transparent 45%),
+                radial-gradient(circle at 70% 15%, rgba(255, 76, 201, 0.06) 0%, transparent 35%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #app {
+            position: relative;
+            z-index: 3;
+        }
+        
+        /* Matte glass (frosted) – dark overlay, strong blur, soft inner glow */
+        .glass-effect, header, .dashboard-card, .stats-card, .order-card, .admin-order-card,
+        .notification-dropdown, .payment-dropdown, .filter-btn, .view-toggle-btn,
+        #orderActionModal > div, #rejectionModal > div, #overrideModal > div,
+        #paymentVerificationModal > div, #packingSlipModal > div, #orderDetailModal > div,
+        .btn-primary, .btn-success, .btn-danger, .badge, .tab-active, .status-pending,
+        .status-accepted, .status-processing, .status-qc, .status-packed, .status-shipped,
+        .status-delivered, .status-rejected, .sla-24, .sla-48, .sla-72,
+        .payment-status-paid, .payment-status-pending, .admin-badge, .filter-btn.active,
+        .view-toggle-btn.active, .floating, #refreshBtn {
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            background: rgba(10, 27, 46, 0.65) !important;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
+                        0 0 0 1px rgba(255, 47, 163, 0.05) inset,
+                        0 0 20px rgba(255, 76, 201, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* Override specific backgrounds to maintain deep navy + neon accents */
+        .gradient-bg, .seller-gradient, .admin-gradient, .stats-card::before,
+        .btn-primary, .btn-success, .btn-danger, .tab-active, .filter-btn.active,
+        .view-toggle-btn.active, .status-badge, .badge, .admin-badge {
+            background: rgba(10, 27, 46, 0.7) !important;
+            backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 47, 163, 0.2);
+            box-shadow: 0 0 30px rgba(255, 47, 163, 0.1);
+        }
+        
+        /* Electric magenta & hot pink glow – soft accent lighting */
+        .btn-primary, .btn-success, .btn-danger, .tab-active, .floating, #refreshBtn,
+        .notification-badge, .pulse, .status-accepted, .status-processing {
+            border-color: rgba(255, 47, 163, 0.4) !important;
+            box-shadow: 0 0 25px rgba(255, 47, 163, 0.25), 0 4px 12px rgba(0,0,0,0.4) !important;
+        }
+        
+        /* Neon lavender atmospheric glow */
+        .glass-effect header, .admin-order-card, .order-card, .stats-card,
+        .dashboard-card, .notification-dropdown, .payment-dropdown {
+            border-color: rgba(182, 109, 255, 0.15) !important;
+            box-shadow: 0 0 30px rgba(182, 109, 255, 0.08), 0 8px 32px rgba(0,0,0,0.4);
+        }
+        
+        /* Aqua teal reflected depth – subtle */
+        .stats-card .bg-gradient-to-br, .order-image, .admin-order-image,
+        .product-image-small, .admin-badge, .badge {
+            box-shadow: 0 0 15px rgba(28, 200, 200, 0.15);
+        }
+        
+        /* Text colors – high contrast, luminous */
+        h1, h2, h3, h4, .font-bold, .text-gray-800, .text-gray-900 {
+            color: rgba(255, 255, 255, 0.95) !important;
+            text-shadow: 0 0 10px rgba(255, 47, 163, 0.3);
+        }
+        p, span, .text-gray-600, .text-gray-500, .text-gray-700 {
+            color: rgba(220, 230, 255, 0.8) !important;
+        }
+        
+        /* diffused shadows, no glossy reflections */
+        .card-hover:hover, .admin-order-card:hover, .order-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 76, 201, 0.25) !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 47, 163, 0.2);
+        }
+        
+        /* Very subtle grain texture */
+        .dashboard-card, .stats-card, header, .admin-order-card, .order-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .dashboard-card::after, .stats-card::after, .admin-order-card::after, .order-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4wMjUiIC8+PC9zdmc+');
+            opacity: 0.2;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+        
+        /* status & badge – frosted deep base with neon edge */
+        .badge, .admin-badge, .status-pending, .status-accepted, .status-processing,
+        .status-qc, .status-packed, .status-shipped, .status-delivered, .status-rejected,
+        .sla-24, .sla-48, .sla-72, .payment-status-paid, .payment-status-pending {
+            background: rgba(10, 27, 46, 0.8) !important;
+            border: 1px solid rgba(255, 47, 163, 0.3) !important;
+            color: white !important;
+            font-weight: 500;
+            text-shadow: 0 0 8px currentColor;
+        }
+        .status-delivered { border-color: #1CC8C8 !important; box-shadow: 0 0 12px #1CC8C8; }
+        .status-rejected { border-color: #FF2FA3 !important; box-shadow: 0 0 12px #FF2FA3; }
+        
+        /* risk indicators – neon infused */
+        .risk-high { background: rgba(255, 47, 163, 0.12) !important; border-left: 4px solid #FF2FA3 !important; }
+        .risk-medium { background: rgba(182, 109, 255, 0.12) !important; border-left: 4px solid #B66DFF !important; }
+        .risk-low { background: rgba(28, 200, 200, 0.12) !important; border-left: 4px solid #1CC8C8 !important; }
+        
+        /* matte glass inputs */
+        input, select, textarea {
+            background: rgba(10, 27, 46, 0.6) !important;
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            color: white !important;
+            border-radius: 16px;
+            padding: 0.75rem;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #FF4CC9 !important;
+            box-shadow: 0 0 20px rgba(255, 76, 201, 0.2) !important;
+            outline: none;
+        }
+        
+        /* table rows – dark velvet */
+        tbody tr {
+            background: rgba(10, 27, 46, 0.5);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        thead {
+            background: rgba(10, 27, 46, 0.8);
+        }
+        
+        /* floating refresh button – neon magenta core */
+        #refreshBtn, .floating {
+            background: rgba(255, 47, 163, 0.2) !important;
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 47, 163, 0.6);
+            box-shadow: 0 0 40px rgba(255, 47, 163, 0.4);
+        }
+        
+        /* custom scrollbar – neon hint */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0A1B2E; }
+        ::-webkit-scrollbar-thumb { background: #FF2FA3; border-radius: 20px; }
+        
+        /* ========== original css below (preserved, but aesthetic applied) ========== */
+        /* FIX: Ensure proper mobile sizing */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .seller-gradient {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+        
+        .admin-gradient {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 47, 163, 0.5); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 47, 163, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 47, 163, 0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .dashboard-card {
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        
+        .stats-card {
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FF2FA3, #B66DFF, #1CC8C8);
+            opacity: 0.7;
+        }
+        
+        .tab-active {
+            color: white;
+        }
+        
+        .btn-primary, .btn-success, .btn-danger {
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover, .btn-success:hover, .btn-danger:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 47, 163, 0.7);
+        }
+        
+        .badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 12px;
+        }
+        
+        .filter-btn {
+            border-radius: 12px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-btn:hover {
+            border-color: #FF4CC9;
+            background: rgba(255, 47, 163, 0.15) !important;
+        }
+        
+        .filter-btn.active {
+            background: rgba(255, 47, 163, 0.3) !important;
+            border-color: #FF2FA3;
+        }
+        
+        .notification-pulse {
+            animation: notificationPulse 1s infinite;
+        }
+        
+        @keyframes notificationPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); background: #FF2FA3; }
+            100% { transform: scale(1); }
+        }
+        
+        /* Grid view styles */
+        .order-card, .admin-order-card {
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .order-image, .admin-order-image {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+        
+        .product-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: rgba(10, 27, 46, 0.4);
+            backdrop-filter: blur(12px);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+        
+        .product-image-small {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 12px;
+        }
+        
+        .admin-grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .admin-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 11px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .view-toggle-btn {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .view-toggle-btn.active {
+            background: rgba(255, 47, 163, 0.3) !important;
+            border: 1px solid #FF2FA3;
+            color: white;
+        }
+        
+        .notification-dropdown, .payment-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 400px;
+            background: rgba(10, 27, 46, 0.8) !important;
+            backdrop-filter: blur(30px);
+            border-radius: 16px;
+            z-index: 100;
+            overflow: hidden;
+            display: none;
+            border: 1px solid rgba(255, 47, 163, 0.2);
+        }
+        
+        .notification-item, .payment-option {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            cursor: pointer;
+            transition: background 0.2s;
+            color: white;
+        }
+        
+        .notification-item:hover, .payment-option:hover {
+            background: rgba(255, 47, 163, 0.15) !important;
+        }
+        
+        .notification-item.unread {
+            background: rgba(182, 109, 255, 0.1);
+            border-left: 3px solid #B66DFF;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            background: #FF2FA3 !important;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .payment-option i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+            color: #FF4CC9;
+        }
+        
+        /* FIX: Mobile responsiveness improvements */
+        @media (max-width: 768px) {
+            .max-w-7xl {
+                max-width: 100% !important;
+            }
+            .notification-dropdown {
+                width: 90vw !important;
+            }
+            .admin-grid-view {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+            }
+        }
+        @media (max-width: 640px) {
+            .admin-grid-view { grid-template-columns: 1fr !important; }
+        }
+        .fixed.inset-0 { align-items: flex-start !important; padding-top: 2rem; overflow-y: auto; }
+        button, .filter-btn, .payment-option, .notification-item { min-height: 44px; }
+        .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div id="app">
+        <!-- Header - now with neon ocean matte glass -->
+        <header class="sticky top-0 z-40 shadow-sm" style="background: rgba(10,27,46,0.7); backdrop-filter: blur(28px);">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg" style="background: rgba(255,47,163,0.2); border:1px solid #FF4CC9;">
+                            <i class="fas fa-chart-line text-2xl" style="color:#FF4CC9; text-shadow:0 0 15px #FF2FA3;"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold" style="color:white; text-shadow:0 0 15px #FF2FA3;">Dashboard Pro</h1>
+                            <p class="text-xs" style="color:rgba(200,220,255,0.8);">Seller & Admin Intelligence Dashboard</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-6">
+                        <!-- Role Selector -->
+                        <div class="inline-flex rounded-xl p-1" style="background: rgba(10,27,46,0.8); border:1px solid rgba(255,47,163,0.2);">
+                            <button id="sellerViewBtn" class="px-6 py-2 rounded-lg transition flex items-center tab-active" style="background: rgba(255,47,163,0.25); border-color:#FF2FA3;">
+                                <i class="fas fa-store mr-2"></i> Seller
+                            </button>
+                            <button id="adminViewBtn" class="px-6 py-2 rounded-lg transition flex items-center" style="background: transparent; color:white;">
+                                <i class="fas fa-user-shield mr-2"></i> Admin
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <!-- Notification Bell -->
+                            <div class="relative">
+                                <i class="fas fa-bell text-xl hover:text-pink-400 cursor-pointer transition" id="notificationBell" style="color:rgba(255,255,255,0.8); text-shadow:0 0 10px #FF2FA3;"></i>
+                                <span class="absolute -top-1 -right-1 w-5 h-5 text-white text-xs rounded-full flex items-center justify-center notification-pulse" id="notificationCount" style="background:#FF2FA3;">3</span>
+                                
+                                <div class="notification-dropdown" id="notificationDropdown">
+                                    <div class="p-4 border-b flex justify-between items-center" style="border-color:rgba(255,47,163,0.2);">
+                                        <h3 class="font-bold" id="notificationHeader" style="color:white;">Notifications</h3>
+                                        <button id="markAllRead" class="text-sm" style="color:#FF4CC9;">Mark all as read</button>
+                                    </div>
+                                    <div class="max-h-96 overflow-y-auto" id="notificationList"></div>
+                                    <div class="p-4 border-t text-center" style="border-color:rgba(255,47,163,0.2);">
+                                        <a href="#" class="text-sm" style="color:#B66DFF;">View all notifications</a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3 rounded-xl px-4 py-2 shadow-sm" style="background: rgba(10,27,46,0.7); backdrop-filter: blur(24px); border:1px solid rgba(255,76,201,0.2);">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: radial-gradient(circle, #FF2FA3 0%, #B66DFF 100%);">
+                                    <i class="fas fa-user text-white text-sm"></i>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-medium" style="color:white;">John Doe</p>
+                                    <p class="text-xs" style="color:#B66DFF;" id="currentRoleDisplay">Seller</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Seller Dashboard -->
+            <div id="sellerDashboard" class="fade-in">
+                <!-- Seller Header -->
+                <div class="mb-10">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                        <div>
+                            <h2 class="text-3xl font-bold mb-2" style="color:white; text-shadow:0 0 20px #FF2FA3;">Seller Dashboard</h2>
+                            <p style="color:rgba(200,230,255,0.9);">Manage incoming orders, confirm/reject with reasons, update status flow</p>
+                        </div>
+                        
+                        <div class="mt-4 md:mt-0 flex items-center space-x-4">
+                            <!-- Payment Button with Dropdown - REMOVED VERIFY PAYMENT OPTION -->
+                            <div class="relative">
+                                <button id="paymentBtn" class="px-6 py-2 relative flex items-center" style="background:rgba(255,47,163,0.2); border:1px solid #FF4CC9; border-radius:12px; color:white;">
+                                    <i class="fas fa-file-invoice mr-2"></i> Payment
+                                    <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                                </button>
+                                
+                                <!-- Payment Dropdown - Only Invoice and Packing Slip, NO Verify Payment -->
+                                <div class="payment-dropdown" id="paymentDropdown">
+                                    <div class="payment-option" id="downloadInvoiceOption">
+                                        <i class="fas fa-file-pdf" style="color:#FF4CC9;"></i>
+                                        <span style="color:white;">Download Invoice</span>
+                                    </div>
+                                    <div class="payment-option" id="generatePackingSlipOption">
+                                        <i class="fas fa-receipt" style="color:#1CC8C8;"></i>
+                                        <span style="color:white;">Generate Packing Slip</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button id="mergeOrdersBtn" class="px-6 py-2" style="background:rgba(28,200,200,0.15); border:1px solid #1CC8C8; border-radius:12px; color:white;">
+                                <i class="fas fa-object-group mr-2"></i> Merge Orders
+                            </button>
+                            <button id="splitOrderBtn" class="px-6 py-2" style="background:rgba(182,109,255,0.15); border:1px solid #B66DFF; border-radius:12px; color:white;">
+                                <i class="fas fa-cut mr-2"></i> Split Order
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Seller Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                        <div class="stats-card card-hover p-6 relative">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm mb-2" style="color:#B0D0FF;">Total Orders</p>
+                                    <p class="text-3xl font-bold" style="color:white;" id="sellerTotalOrders">0</p>
+                                    <div class="flex items-center mt-1">
+                                        <span class="text-xs mr-2" style="color:#1CC8C8;"><i class="fas fa-arrow-up mr-1"></i>12%</span>
+                                        <span class="text-xs" style="color:#9BB8FF;">from yesterday</span>
+                                    </div>
+                                </div>
+                                <div class="relative">
+                                    <div class="p-4 rounded-2xl" style="background:rgba(28,200,200,0.1); border:1px solid #1CC8C8;">
+                                        <i class="fas fa-shopping-cart text-2xl" style="color:#1CC8C8;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stats-card card-hover p-6 relative">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm mb-2" style="color:#B0D0FF;">Pending Action</p>
+                                    <p class="text-3xl font-bold" style="color:white;" id="sellerPendingOrders">0</p>
+                                    <div class="flex items-center mt-1">
+                                        <span class="text-xs mr-2" style="color:#FFB86B;"><i class="fas fa-exclamation-circle mr-1"></i>Needs attention</span>
+                                    </div>
+                                </div>
+                                <div class="relative">
+                                    <div class="p-4 rounded-2xl" style="background:rgba(255,79,121,0.1); border:1px solid #FF2FA3;">
+                                        <i class="fas fa-clock text-2xl" style="color:#FF2FA3;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stats-card card-hover p-6 relative">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm mb-2" style="color:#B0D0FF;">To Ship</p>
+                                    <p class="text-3xl font-bold" style="color:white;" id="sellerToShipOrders">0</p>
+                                    <div class="flex items-center mt-1">
+                                        <span class="text-xs mr-2" style="color:#1CC8C8;"><i class="fas fa-check-circle mr-1"></i>On track</span>
+                                    </div>
+                                </div>
+                                <div class="relative">
+                                    <div class="p-4 rounded-2xl" style="background:rgba(28,200,200,0.1); border:1px solid #1CC8C8;">
+                                        <i class="fas fa-truck text-2xl" style="color:#1CC8C8;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stats-card card-hover p-6 relative">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm mb-2" style="color:#B0D0FF;">Delayed</p>
+                                    <p class="text-3xl font-bold" style="color:#FF8AAE;" id="sellerDelayedOrders">0</p>
+                                    <div class="flex items-center mt-1">
+                                        <span class="text-xs mr-2" style="color:#FF8AAE;"><i class="fas fa-arrow-up mr-1"></i>3%</span>
+                                        <span class="text-xs" style="color:#9BB8FF;">from last week</span>
+                                    </div>
+                                </div>
+                                <div class="relative">
+                                    <div class="p-4 rounded-2xl" style="background:rgba(255,47,163,0.1); border:1px solid #FF2FA3;">
+                                        <i class="fas fa-exclamation-triangle text-2xl" style="color:#FF2FA3;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filters Section -->
+                <div class="dashboard-card p-6 mb-8">
+                    <h3 class="text-lg font-semibold mb-4" style="color:white;">Filters</h3>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center space-x-2">
+                            <label class="text-sm" style="color:#C7D9FF;">Date:</label>
+                            <input type="date" id="sellerDateFilter">
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <label class="text-sm" style="color:#C7D9FF;">SKU:</label>
+                            <select id="skuFilter">
+                                <option value="">All SKUs</option>
+                                <option value="SKU001">SKU001</option>
+                                <option value="SKU002">SKU002</option>
+                                <option value="SKU003">SKU003</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <label class="text-sm" style="color:#C7D9FF;">Size:</label>
+                            <select id="sizeFilter">
+                                <option value="">All Sizes</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <label class="text-sm" style="color:#C7D9FF;">Partner:</label>
+                            <select id="partnerFilter">
+                                <option value="">All Partners</option>
+                                <option value="Partner A">Partner A</option>
+                                <option value="Partner B">Partner B</option>
+                            </select>
+                        </div>
+                        <button id="overrideStatusBtn" class="filter-btn"><i class="fas fa-edit mr-2"></i> Override Status</button>
+                        <button id="showDelayedBtn" class="filter-btn active"><i class="fas fa-clock mr-2"></i> Show Delayed</button>
+                        <button id="clearFiltersBtn" class="filter-btn"><i class="fas fa-times mr-2"></i> Clear Filters</button>
+                    </div>
+                </div>
+                
+                <!-- Orders Grid Section -->
+                <div class="dashboard-card overflow-hidden mb-8">
+                    <div class="px-6 py-5 border-b flex justify-between items-center" style="border-color:rgba(255,47,163,0.2);">
+                        <h3 class="text-lg font-semibold" style="color:white;">Incoming Orders</h3>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm" style="color:#C7D9FF;">View:</span>
+                                <button id="gridViewBtn" class="px-3 py-1 rounded-lg text-sm" style="background:rgba(255,47,163,0.3); border:1px solid #FF2FA3; color:white;">
+                                    <i class="fas fa-th-large mr-1"></i> Grid
+                                </button>
+                                <button id="listViewBtn" class="px-3 py-1 rounded-lg text-sm hover:bg-pink-900/20" style="background:rgba(10,27,46,0.6); border:1px solid rgba(255,255,255,0.08);">
+                                    <i class="fas fa-list mr-1"></i> List
+                                </button>
+                            </div>
+                            <span class="badge" id="ordersCount">0 orders</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div id="ordersGridView" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                        <div id="ordersListView" class="hidden overflow-x-auto">
+                            <table class="min-w-full divide-y" style="border-color:rgba(255,47,163,0.1);">
+                                <thead class="bg-gray-50/5">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;"><input type="checkbox" id="selectAllOrders" class="rounded border-gray-300" style="background:rgba(10,27,46,0.6);"></th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">Order ID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">Customer</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">SKU Details</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">Total</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sellerOrdersBody" class="divide-y" style="border-color:rgba(255,255,255,0.02);"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Customer Notes Section -->
+                <div class="dashboard-card p-6">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center" style="color:white;"><i class="fas fa-sticky-note mr-2" style="color:#FF4CC9;"></i> Customer Notes</h3>
+                    <div class="space-y-4" id="customerNotesContainer"></div>
+                </div>
+            </div>
+            
+            <!-- Admin Dashboard (Hidden by default) -->
+            <div id="adminDashboard" class="hidden">
+                <div class="mb-10">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold mb-2" style="color:white; text-shadow:0 0 20px #B66DFF;">Admin Dashboard</h2>
+                        <p style="color:rgba(200,230,255,0.9);">Full visibility of seller order flows, SLA tracking, and risk alerts</p>
+                    </div>
+                    
+                    <!-- Admin Stats -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                        <div class="stats-card card-hover p-6 relative">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm mb-2" style="color:#B0D0FF;">Total Orders</p>
+                                    <p class="text-3xl font-bold" style="color:white;" id="adminTotalOrders">0</p>
+                                    <div class="flex items-center mt-1"><span class="text-xs mr-2" style="color:#1CC8C8;"><i class="fas fa-arrow-up mr-1"></i>12%</span></div>
+                                </div>
+                                <div class="p-4 rounded-2xl" style="background:rgba(28,200,200,0.1); border:1px solid #1CC8C8;">
+                                    <i class="fas fa-shopping-bag text-2xl" style="color:#1CC8C8;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stats-card card-hover p-6 relative">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm mb-2" style="color:#B0D0FF;">SLA Breached</p>
+                                    <p class="text-3xl font-bold" style="color:#FF8AAE;" id="adminSlaBreached">0</p>
+                                    <div class="flex items-center mt-1"><span class="text-xs mr-2" style="color:#FF8AAE;"><i class="fas fa-exclamation-circle mr-1"></i>Critical</span></div>
+                                </div>
+                                <div class="p-4 rounded-2xl" style="background:rgba(255,47,163,0.1); border:1px solid #FF2FA3;">
+                                    <i class="fas fa-exclamation-triangle text-2xl" style="color:#FF2FA3;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stats-card card-hover p-6 relative">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm mb-2" style="color:#B0D0FF;">High Risk</p>
+                                    <p class="text-3xl font-bold" style="color:#FFB86B;" id="adminHighRisk">0</p>
+                                    <div class="flex items-center mt-1"><span class="text-xs mr-2" style="color:#FFB86B;"><i class="fas fa-shield-alt mr-1"></i>Monitor</span></div>
+                                </div>
+                                <div class="p-4 rounded-2xl" style="background:rgba(255,184,107,0.1); border:1px solid #FFB86B;">
+                                    <i class="fas fa-shield-alt text-2xl" style="color:#FFB86B;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stats-card card-hover p-6 relative">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm mb-2" style="color:#B0D0FF;">SLA Compliance</p>
+                                    <p class="text-3xl font-bold" style="color:#1CC8C8;" id="adminSlaCompliance">0%</p>
+                                    <div class="flex items-center mt-1"><span class="text-xs mr-2" style="color:#1CC8C8;"><i class="fas fa-check-circle mr-1"></i>On track</span></div>
+                                </div>
+                                <div class="p-4 rounded-2xl" style="background:rgba(28,200,200,0.1); border:1px solid #1CC8C8;">
+                                    <i class="fas fa-chart-line text-2xl" style="color:#1CC8C8;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Alerts Section -->
+                <div class="dashboard-card mb-8">
+                    <div class="px-6 py-5 border-b flex justify-between items-center" style="border-color:rgba(255,47,163,0.2);">
+                        <h3 class="text-lg font-semibold flex items-center" style="color:white;"><i class="fas fa-exclamation-triangle mr-2" style="color:#FF2FA3;"></i> Alerts</h3>
+                        <button id="runQcCheckBtn" class="px-4 py-2 text-sm" style="background:rgba(182,109,255,0.2); border:1px solid #B66DFF; border-radius:12px; color:white;"> <i class="fas fa-check-double mr-2"></i> Run QC Check</button>
+                    </div>
+                    <div class="p-6"><div id="alertsContainer" class="space-y-4"></div></div>
+                </div>
+                
+                <!-- Admin Filters -->
+                <div class="dashboard-card p-6 mb-8">
+                    <h3 class="text-lg font-semibold mb-4" style="color:white;">Admin Filters</h3>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center space-x-2">
+                            <label class="text-sm" style="color:#C7D9FF;">Seller:</label>
+                            <select id="sellerFilter"><option value="">All Sellers</option><option value="Seller A">Seller A</option><option value="Seller B">Seller B</option></select>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <label class="text-sm" style="color:#C7D9FF;">Status:</label>
+                            <select id="statusFilter"><option value="">All Statuses</option><option>Pending</option><option>Accepted</option><option>Processing</option><option>QC Done</option><option>Packed</option><option>Shipped</option><option>Delivered</option></select>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <label class="text-sm" style="color:#C7D9FF;">SLA Flag:</label>
+                            <select id="slaFilter"><option value="">All</option><option value="24">>24h Delayed</option><option value="48">>48h Delayed</option><option value="72">>72h Delayed</option></select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card p-6 mb-6">
+                    <div class="flex justify-between items-center">
+                        <div><h3 class="text-lg font-semibold" style="color:white;">All Orders Overview</h3><p class="text-sm mt-1" style="color:#B0D0FF;">Monitor seller performance and order statuses</p></div>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm" style="color:#C7D9FF;">View:</span>
+                                <button id="adminGridViewBtn" class="view-toggle-btn active"><i class="fas fa-th-large mr-1"></i> Grid</button>
+                                <button id="adminListViewBtn" class="view-toggle-btn"><i class="fas fa-list mr-1"></i> List</button>
+                            </div>
+                            <span class="badge" id="adminOrdersCount">0 orders</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="adminGridView" class="admin-grid-view mb-8"></div>
+                <div id="adminListView" class="hidden dashboard-card overflow-hidden mb-8">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y" style="border-color:rgba(255,47,163,0.1);">
+                            <thead class="bg-gray-50/5">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">Order ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">Seller</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">Customer</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">SKU Details</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">Payment</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">SLA</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">Risk</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style="color:#B0D0FF;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminOrdersBody" class="divide-y" style="border-color:rgba(255,255,255,0.02);"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Insights Section -->
+                <div class="dashboard-card p-6">
+                    <h3 class="text-lg font-semibold mb-6 flex items-center" style="color:white;"><i class="fas fa-chart-bar mr-2" style="color:#B66DFF;"></i> Insights</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="p-5 rounded-2xl" style="background:rgba(10,27,46,0.7); backdrop-filter:blur(20px); border:1px solid rgba(182,109,255,0.2);"><h4 class="font-bold mb-3" style="color:white;">Order Volume by Category</h4><div id="categoryInsight" class="space-y-2"></div></div>
+                        <div class="p-5 rounded-2xl" style="background:rgba(10,27,46,0.7); backdrop-filter:blur(20px); border:1px solid rgba(28,200,200,0.2);"><h4 class="font-bold mb-3" style="color:white;">Seller Performance</h4><div id="sellerInsight" class="space-y-2"></div></div>
+                        <div class="p-5 rounded-2xl" style="background:rgba(10,27,46,0.7); backdrop-filter:blur(20px); border:1px solid rgba(255,47,163,0.2);"><h4 class="font-bold mb-3" style="color:white;">Fulfillment Bottlenecks</h4><div id="bottleneckInsight" class="space-y-2"></div></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Modals — all with neon ocean matte glass -->
+        <div id="orderActionModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="rounded-2xl shadow-2xl max-w-2xl w-full slide-in" style="background:rgba(10,27,46,0.85); backdrop-filter:blur(30px); border:1px solid rgba(255,47,163,0.3);">
+                <div class="p-8">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold" id="modalTitle" style="color:white;">Order Action</h3>
+                            <p class="text-gray-600" id="modalSubtitle" style="color:#B0D0FF;">Perform action on selected orders</p>
+                        </div>
+                        <button id="closeOrderActionModal" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-2xl" style="color:#FF4CC9;"></i>
+                        </button>
+                    </div>
+                    <div class="space-y-6">
+                        <div id="modalBody"></div>
+                        <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200" style="border-color:rgba(255,47,163,0.2);">
+                            <button id="cancelModalAction" class="px-6 py-3 border rounded-xl transition" style="background:rgba(10,27,46,0.5); border-color:rgba(255,255,255,0.1); color:white;">Cancel</button>
+                            <button id="confirmModalAction" class="px-6 py-3 rounded-xl transition shadow-md" style="background:rgba(255,47,163,0.3); border:1px solid #FF4CC9; color:white;">Confirm Action</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="rejectionModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="rounded-2xl shadow-2xl max-w-md w-full slide-in" style="background:rgba(10,27,46,0.85); backdrop-filter:blur(30px); border:1px solid #FF2FA3;">
+                <div class="p-8">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center mr-4" style="background:rgba(255,47,163,0.2); border:1px solid #FF2FA3;">
+                            <i class="fas fa-exclamation-triangle text-xl" style="color:#FF2FA3;"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold" style="color:white;">Reject Order</h3>
+                            <p style="color:#B0D0FF;">Please provide a reason for rejection</p>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2" style="color:#C7D9FF;">Rejection Reason</label>
+                            <textarea id="rejectionReason" class="w-full border rounded-xl p-3 focus:ring-2" rows="4" placeholder="Enter detailed reason for rejecting this order..."></textarea>
+                        </div>
+                        <div class="flex justify-end space-x-4 pt-4">
+                            <button id="cancelReject" class="px-6 py-3 border rounded-xl transition" style="background:rgba(10,27,46,0.5); border-color:rgba(255,255,255,0.1); color:white;">Cancel</button>
+                            <button id="confirmReject" class="px-6 py-3 rounded-xl transition shadow-md" style="background:rgba(255,47,163,0.3); border:1px solid #FF2FA3; color:white;">Reject Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="overrideModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="rounded-2xl shadow-2xl max-w-md w-full slide-in" style="background:rgba(10,27,46,0.85); backdrop-filter:blur(30px); border:1px solid #B66DFF;">
+                <div class="p-8">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center mr-4" style="background:rgba(182,109,255,0.2); border:1px solid #B66DFF;">
+                            <i class="fas fa-edit text-xl" style="color:#B66DFF;"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold" style="color:white;">Override Order Status</h3>
+                            <p style="color:#B0D0FF;">Manually update order status with reason</p>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div><label class="block text-sm font-medium mb-2" style="color:#C7D9FF;">Order ID</label><input type="text" id="overrideOrderId" class="w-full border rounded-xl p-3" readonly></div>
+                        <div><label class="block text-sm font-medium mb-2" style="color:#C7D9FF;">New Status</label><select id="newStatus" class="w-full border rounded-xl p-3"><option>Pending</option><option>Accepted</option><option>Processing</option><option>QC Done</option><option>Packed</option><option>Shipped</option><option>Delivered</option></select></div>
+                        <div><label class="block text-sm font-medium mb-2" style="color:#C7D9FF;">Reason for Override</label><textarea id="overrideReason" class="w-full border rounded-xl p-3" rows="3" placeholder="Enter reason for status override..."></textarea></div>
+                        <div class="flex justify-end space-x-4 pt-4">
+                            <button id="cancelOverride" class="px-6 py-3 border rounded-xl transition" style="background:rgba(10,27,46,0.5); border-color:rgba(255,255,255,0.1); color:white;">Cancel</button>
+                            <button id="confirmOverride" class="px-6 py-3 rounded-xl transition shadow-md" style="background:rgba(182,109,255,0.3); border:1px solid #B66DFF; color:white;">Confirm Override</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="paymentVerificationModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="rounded-2xl shadow-2xl max-w-md w-full slide-in" style="background:rgba(10,27,46,0.85); backdrop-filter:blur(30px); border:1px solid #1CC8C8;">
+                <div class="p-8">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center mr-4" style="background:rgba(28,200,200,0.2); border:1px solid #1CC8C8;">
+                            <i class="fas fa-credit-card text-xl" style="color:#1CC8C8;"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold" style="color:white;">Verify Payment</h3>
+                            <p style="color:#B0D0FF;">Mark payment as verified for selected order</p>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div><label class="block text-sm font-medium mb-2" style="color:#C7D9FF;">Order ID</label><input type="text" id="paymentVerificationOrderId" class="w-full border rounded-xl p-3" readonly></div>
+                        <div><label class="block text-sm font-medium mb-2" style="color:#C7D9FF;">Payment Method</label><select id="verificationPaymentMethod" class="w-full border rounded-xl px-3 py-2"><option value="bank_transfer">Bank Transfer</option><option value="credit_card">Credit Card</option><option value="paypal">PayPal</option><option value="digital_wallet">Digital Wallet</option><option value="cash_on_delivery">Cash on Delivery</option></select></div>
+                        <div><label class="block text-sm font-medium mb-2" style="color:#C7D9FF;">Payment Reference ID</label><input type="text" id="paymentReferenceId" class="w-full border rounded-xl p-3" placeholder="Enter payment reference number"></div>
+                        <div><label class="block text-sm font-medium mb-2" style="color:#C7D9FF;">Payment Amount</label><input type="text" id="paymentAmount" class="w-full border rounded-xl p-3" readonly></div>
+                        <div><label class="block text-sm font-medium mb-2" style="color:#C7D9FF;">Payment Date</label><input type="datetime-local" id="paymentDateInput" class="w-full border rounded-xl p-3"></div>
+                        <div class="flex justify-end space-x-4 pt-4">
+                            <button id="cancelPaymentVerification" class="px-6 py-3 border rounded-xl transition" style="background:rgba(10,27,46,0.5); border-color:rgba(255,255,255,0.1); color:white;">Cancel</button>
+                            <button id="confirmPaymentVerification" class="px-6 py-3 rounded-xl transition shadow-md" style="background:rgba(28,200,200,0.3); border:1px solid #1CC8C8; color:white;">Verify Payment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="packingSlipModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="rounded-2xl shadow-2xl max-w-md w-full slide-in" style="background:rgba(10,27,46,0.85); backdrop-filter:blur(30px); border:1px solid #FF4CC9;">
+                <div class="p-8">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center mr-4" style="background:rgba(255,76,201,0.2); border:1px solid #FF4CC9;">
+                            <i class="fas fa-receipt text-xl" style="color:#FF4CC9;"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold" style="color:white;">Generate Packing Slip</h3>
+                            <p style="color:#B0D0FF;">Create packing slip for selected orders</p>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="space-y-4">
+                            <div class="p-4 rounded-xl" style="background:rgba(28,200,200,0.1); border:1px solid #1CC8C8;">
+                                <p class="text-sm" style="color:#C7D9FF;"><i class="fas fa-info-circle mr-2" style="color:#1CC8C8;"></i>Packing slip will be generated for <span id="selectedOrdersCount">0</span> selected order(s).</p>
+                            </div>
+                            <div><label class="block text-sm font-medium mb-2" style="color:#C7D9FF;">Shipping Method</label><select id="shippingMethod" class="w-full border rounded-xl p-3"><option value="standard">Standard Shipping</option><option value="express">Express Shipping</option><option value="priority">Priority Shipping</option><option value="international">International</option></select></div>
+                            <div><label class="block text-sm font-medium mb-2" style="color:#C7D9FF;">Packing Date</label><input type="date" id="packingSlipDate" class="w-full border rounded-xl p-3"></div>
+                        </div>
+                        <div class="flex justify-end space-x-4 pt-4">
+                            <button id="cancelPackingSlip" class="px-6 py-3 border rounded-xl transition" style="background:rgba(10,27,46,0.5); border-color:rgba(255,255,255,0.1); color:white;">Cancel</button>
+                            <button id="confirmPackingSlip" class="px-6 py-3 rounded-xl transition shadow-md" style="background:rgba(255,76,201,0.3); border:1px solid #FF4CC9; color:white;">Generate Packing Slip</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="orderDetailModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="rounded-2xl shadow-2xl max-w-4xl w-full slide-in" style="background:rgba(10,27,46,0.9); backdrop-filter:blur(30px); border:1px solid rgba(255,47,163,0.4);">
+                <div class="p-8">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold" id="detailOrderId" style="color:white;">Order Detail</h3>
+                            <p class="text-gray-600" id="detailCustomer" style="color:#B0D0FF;">Customer details</p>
+                        </div>
+                        <button id="closeOrderDetailModal" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-2xl" style="color:#FF4CC9;"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div>
+                            <div class="mb-6"><h4 class="text-lg font-semibold mb-3" style="color:white;">Order Items</h4><div id="detailItemsContainer" class="space-y-3"></div></div>
+                            <div><h4 class="text-lg font-semibold mb-3" style="color:white;">Order Information</h4><div id="detailInfoContainer" class="space-y-2"></div></div>
+                        </div>
+                        <div>
+                            <div class="mb-6"><h4 class="text-lg font-semibold mb-3" style="color:white;">Product Preview</h4><div class="rounded-xl overflow-hidden" style="background:rgba(10,27,46,0.6); border:1px solid rgba(255,47,163,0.2);"><img id="detailMainImage" src="" alt="Product Image" class="w-full h-64 object-cover"></div></div>
+                            <div><h4 class="text-lg font-semibold mb-3" style="color:white;">Actions</h4><div id="detailActionsContainer" class="space-y-3"></div></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200 mt-6" style="border-color:rgba(255,47,163,0.2);">
+                        <button id="closeDetailModal" class="px-6 py-3 border rounded-xl transition" style="background:rgba(10,27,46,0.5); border-color:rgba(255,255,255,0.1); color:white;">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Toast Notification -->
+        <div id="toast" class="hidden fixed bottom-8 right-8 p-6 rounded-2xl shadow-2xl max-w-sm z-50 slide-in" style="background:rgba(10,27,46,0.9); backdrop-filter:blur(24px); border:1px solid #FF4CC9;">
+            <div class="flex items-start">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mr-4" style="background:#FF2FA3;"><i class="fas fa-check text-white text-xl"></i></div>
+                <div>
+                    <p class="font-bold text-lg mb-1" id="toastTitle" style="color:white;">Success</p>
+                    <p class="text-white/80" id="toastMessage">Action completed successfully</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating Refresh Button -->
+        <button id="refreshBtn" class="fixed bottom-8 left-8 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:shadow-xl transition-all duration-300 z-40 floating" style="background:rgba(255,47,163,0.25); border:1px solid #FF4CC9;">
+            <i class="fas fa-sync-alt text-xl" style="color:white; text-shadow:0 0 20px #FF2FA3;"></i>
+        </button>
+    </div>
+
+    <script>
+        // ==================== FULL ORIGINAL SCRIPT - COMPLETE AND UNMODIFIED ====================
+        // Fashion product images based on SKU types
+        const productImages = {
+            'SKU001': {
+                main: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&h=600&fit=crop&crop=center',
+                items: [
+                    'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&h=400&fit=crop&crop=center',
+                    'https://images.unsplash.com/photo-1582418702059-97ebafb35d09?w=400&h=400&fit=crop&crop=center',
+                    'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400&h=400&fit=crop&crop=center'
+                ]
+            },
+            'SKU002': {
+                main: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=600&fit=crop&crop=center',
+                items: [
+                    'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&h=400&fit=crop&crop=center',
+                    'https://images.unsplash.com/photo-1520006403909-838d6b92c22e?w=400&h=400&fit=crop&crop=center',
+                    'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=400&h=400&fit=crop&crop=center'
+                ]
+            },
+            'SKU003': {
+                main: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&h=600&fit=crop&crop=center',
+                items: [
+                    'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=400&fit=crop&crop=center',
+                    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop&crop=center',
+                    'https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=400&h=400&fit=crop&crop=center'
+                ]
+            }
+        };
+        
+        const statusFlow = ["Pending", "Accepted", "Processing", "QC Done", "Packed", "Shipped", "Delivered"];
+        
+        // State
+        let currentRole = 'seller';
+        let selectedOrders = [];
+        let currentOrderForAction = null;
+        let mockData = [];
+        let currentViewMode = 'grid';
+        let adminCurrentViewMode = 'grid';
+        
+        // Role-based Notification system - NOTIFICATIONS ARE INFORMATION ONLY
+        let sellerNotifications = [
+            {
+                id: 1,
+                type: 'order_accepted',
+                title: 'Order Accepted',
+                message: 'Order ORD-1001 has been accepted',
+                timestamp: '2023-10-15 10:30 AM',
+                read: false,
+                orderId: 'ORD-1001'
+            },
+            {
+                id: 2,
+                type: 'payment_verified',
+                title: 'Payment Verified',
+                message: 'Payment for order ORD-1004 has been verified',
+                timestamp: '2023-10-13 09:15 AM',
+                read: true,
+                orderId: 'ORD-1004'
+            },
+            {
+                id: 3,
+                type: 'status_updated',
+                title: 'Status Updated',
+                message: 'Order ORD-1005 has been shipped',
+                timestamp: '2023-10-12 02:45 PM',
+                read: false,
+                orderId: 'ORD-1005'
+            }
+        ];
+
+        let adminNotifications = [
+            {
+                id: 1,
+                type: 'order_accepted',
+                title: 'Order Accepted',
+                message: 'Order ORD-1001 has been accepted by Seller A',
+                timestamp: '2023-10-15 10:30 AM',
+                read: false,
+                orderId: 'ORD-1001',
+                seller: 'Seller A'
+            },
+            {
+                id: 2,
+                type: 'order_rejected',
+                title: 'Order Rejected',
+                message: 'Order ORD-1002 has been rejected by Seller B - Reason: Out of stock',
+                timestamp: '2023-10-14 03:45 PM',
+                read: false,
+                orderId: 'ORD-1002',
+                seller: 'Seller B'
+            },
+            {
+                id: 3,
+                type: 'payment_verified',
+                title: 'Payment Verified',
+                message: 'Payment for order ORD-1004 has been verified',
+                timestamp: '2023-10-13 09:15 AM',
+                read: true,
+                orderId: 'ORD-1004'
+            },
+            {
+                id: 4,
+                type: 'sla_breached',
+                title: 'SLA Breached',
+                message: 'Order ORD-1002 has exceeded 48-hour SLA',
+                timestamp: '2023-10-14 11:20 AM',
+                read: false,
+                orderId: 'ORD-1002'
+            }
+        ];
+
+        // Generate initial mock data with consistent images
+        function generateMockData() {
+            const orders = [
+                {
+                    id: "ORD-1001",
+                    seller: "Seller A",
+                    date: "2023-10-15",
+                    customer: "Sarah Johnson",
+                    skuDetails: "SKU001 (L), SKU002 (M)",
+                    items: [
+                        { sku: "SKU001", size: "L", color: "Red", quantity: 1 },
+                        { sku: "SKU002", size: "M", color: "Blue", quantity: 2 }
+                    ],
+                    status: "Pending",
+                    total: "$149.99",
+                    sla: "24",
+                    risk: "medium",
+                    notes: "Customer prefers loose fit. Delivery before 5 PM.",
+                    fulfillmentPartner: "Partner A",
+                    isDelayed: false,
+                    isHighRisk: false,
+                    customerNotes: "Please ensure packaging is discreet. Gift for anniversary.",
+                    orderProgress: 0,
+                    paymentVerified: false,
+                    paymentMethod: null,
+                    paymentReference: null,
+                    paymentDate: null,
+                    paymentVerifiedBy: null,
+                    invoiceAutoGenerated: false,
+                    packingSlipGenerated: false,
+                    packingSlipGeneratedAt: null
+                },
+                {
+                    id: "ORD-1002",
+                    seller: "Seller B",
+                    date: "2023-10-14",
+                    customer: "Michael Chen",
+                    skuDetails: "SKU003 (S)",
+                    items: [
+                        { sku: "SKU003", size: "S", color: "Black", quantity: 1 }
+                    ],
+                    status: "Pending",
+                    total: "$79.99",
+                    sla: "48",
+                    risk: "high",
+                    notes: "Measurement: Chest 38\", Waist 32\". COD order.",
+                    fulfillmentPartner: "Partner B",
+                    isDelayed: true,
+                    isHighRisk: true,
+                    customerNotes: "Need by Friday for event. Please include gift receipt.",
+                    orderProgress: 0,
+                    paymentVerified: false,
+                    paymentMethod: null,
+                    paymentReference: null,
+                    paymentDate: null,
+                    paymentVerifiedBy: null,
+                    invoiceAutoGenerated: false,
+                    packingSlipGenerated: false,
+                    packingSlipGeneratedAt: null
+                },
+                {
+                    id: "ORD-1003",
+                    seller: "Seller A",
+                    date: "2023-10-13",
+                    customer: "Emma Wilson",
+                    skuDetails: "SKU001 (XL), SKU003 (M)",
+                    items: [
+                        { sku: "SKU001", size: "XL", color: "Red", quantity: 1 },
+                        { sku: "SKU003", size: "M", color: "Black", quantity: 1 }
+                    ],
+                    status: "Accepted",
+                    total: "$199.99",
+                    sla: "normal",
+                    risk: "low",
+                    notes: "Customer has previous return. Handle with care.",
+                    fulfillmentPartner: "Partner A",
+                    isDelayed: false,
+                    isHighRisk: false,
+                    customerNotes: "Allergic to synthetic fabrics, please check material.",
+                    orderProgress: 20,
+                    paymentVerified: false,
+                    paymentMethod: null,
+                    paymentReference: null,
+                    paymentDate: null,
+                    paymentVerifiedBy: null,
+                    invoiceAutoGenerated: false,
+                    packingSlipGenerated: false,
+                    packingSlipGeneratedAt: null
+                },
+                {
+                    id: "ORD-1004",
+                    seller: "Seller B",
+                    date: "2023-10-12",
+                    customer: "David Miller",
+                    skuDetails: "SKU002 (S), SKU002 (M)",
+                    items: [
+                        { sku: "SKU002", size: "S", color: "Blue", quantity: 1 },
+                        { sku: "SKU002", size: "M", color: "Blue", quantity: 1 }
+                    ],
+                    status: "Processing",
+                    total: "$119.98",
+                    sla: "72",
+                    risk: "medium",
+                    notes: "Gift wrapping requested. Include note.",
+                    fulfillmentPartner: "Partner B",
+                    isDelayed: true,
+                    isHighRisk: false,
+                    customerNotes: "Delivery after 6 PM only. Leave at door if no answer.",
+                    orderProgress: 40,
+                    paymentVerified: true,
+                    paymentMethod: "bank_transfer",
+                    paymentReference: "PAY-REF-789012",
+                    paymentDate: "2023-10-12T14:30:00",
+                    paymentVerifiedBy: "Admin",
+                    invoiceAutoGenerated: true,
+                    invoiceGeneratedAt: "2023-10-13T09:15:00Z",
+                    packingSlipGenerated: false,
+                    packingSlipGeneratedAt: null
+                },
+                {
+                    id: "ORD-1005",
+                    seller: "Seller A",
+                    date: "2023-10-11",
+                    customer: "Olivia Parker",
+                    skuDetails: "SKU001 (M)",
+                    items: [
+                        { sku: "SKU001", size: "M", color: "Red", quantity: 1 }
+                    ],
+                    status: "Shipped",
+                    total: "$89.99",
+                    sla: "normal",
+                    risk: "low",
+                    notes: "Leave at front door if no answer.",
+                    fulfillmentPartner: "Partner A",
+                    isDelayed: false,
+                    isHighRisk: false,
+                    customerNotes: "Fragile item, please handle with care. Gift wrap requested.",
+                    orderProgress: 90,
+                    paymentVerified: true,
+                    paymentMethod: "credit_card",
+                    paymentReference: "PAY-REF-345678",
+                    paymentDate: "2023-10-10T11:45:00",
+                    paymentVerifiedBy: "Admin",
+                    invoiceAutoGenerated: true,
+                    invoiceGeneratedAt: "2023-10-11T10:45:00Z",
+                    packingSlipGenerated: true,
+                    packingSlipGeneratedAt: "2023-10-11T09:30:00Z"
+                },
+                {
+                    id: "ORD-1006",
+                    seller: "Seller B",
+                    date: "2023-10-10",
+                    customer: "James Wilson",
+                    skuDetails: "SKU003 (L)",
+                    items: [
+                        { sku: "SKU003", size: "L", color: "Black", quantity: 1 }
+                    ],
+                    status: "Delivered",
+                    total: "$99.99",
+                    sla: "normal",
+                    risk: "low",
+                    notes: "Delivered successfully",
+                    fulfillmentPartner: "Partner B",
+                    isDelayed: false,
+                    isHighRisk: false,
+                    customerNotes: "Leave with concierge if unavailable.",
+                    orderProgress: 100,
+                    paymentVerified: true,
+                    paymentMethod: "paypal",
+                    paymentReference: "PAY-REF-901234",
+                    paymentDate: "2023-10-09T15:20:00",
+                    paymentVerifiedBy: "Admin",
+                    invoiceAutoGenerated: true,
+                    invoiceGeneratedAt: "2023-10-10T08:30:00Z",
+                    packingSlipGenerated: true,
+                    packingSlipGeneratedAt: "2023-10-10T10:15:00Z"
+                }
+            ];
+            
+            // Add images to each order based on SKU
+            return orders.map(order => {
+                const firstSku = order.items[0].sku;
+                order.mainImage = productImages[firstSku].main;
+                order.items = order.items.map(item => {
+                    item.image = productImages[item.sku].items[Math.floor(Math.random() * productImages[item.sku].items.length)];
+                    return item;
+                });
+                return order;
+            });
+        }
+
+        // Initialize mock data
+        mockData = generateMockData();
+
+        // DOM Elements
+        const sellerViewBtn = document.getElementById('sellerViewBtn');
+        const adminViewBtn = document.getElementById('adminViewBtn');
+        const sellerDashboard = document.getElementById('sellerDashboard');
+        const adminDashboard = document.getElementById('adminDashboard');
+        const currentRoleDisplay = document.getElementById('currentRoleDisplay');
+        const sellerOrdersBody = document.getElementById('sellerOrdersBody');
+        const adminOrdersBody = document.getElementById('adminOrdersBody');
+        const ordersGridView = document.getElementById('ordersGridView');
+        const ordersListView = document.getElementById('ordersListView');
+        const gridViewBtn = document.getElementById('gridViewBtn');
+        const listViewBtn = document.getElementById('listViewBtn');
+        const ordersCount = document.getElementById('ordersCount');
+        const adminOrdersCount = document.getElementById('adminOrdersCount');
+        const customerNotesContainer = document.getElementById('customerNotesContainer');
+        const alertsContainer = document.getElementById('alertsContainer');
+        const categoryInsight = document.getElementById('categoryInsight');
+        const sellerInsight = document.getElementById('sellerInsight');
+        const bottleneckInsight = document.getElementById('bottleneckInsight');
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const notificationList = document.getElementById('notificationList');
+        const notificationCount = document.getElementById('notificationCount');
+        const notificationHeader = document.getElementById('notificationHeader');
+        const markAllReadBtn = document.getElementById('markAllRead');
+        
+        // Payment dropdown elements
+        const paymentBtn = document.getElementById('paymentBtn');
+        const paymentDropdown = document.getElementById('paymentDropdown');
+        const downloadInvoiceOption = document.getElementById('downloadInvoiceOption');
+        const generatePackingSlipOption = document.getElementById('generatePackingSlipOption');
+        
+        // Stats elements
+        const sellerTotalOrders = document.getElementById('sellerTotalOrders');
+        const sellerPendingOrders = document.getElementById('sellerPendingOrders');
+        const sellerToShipOrders = document.getElementById('sellerToShipOrders');
+        const sellerDelayedOrders = document.getElementById('sellerDelayedOrders');
+        const adminTotalOrders = document.getElementById('adminTotalOrders');
+        const adminSlaBreached = document.getElementById('adminSlaBreached');
+        const adminHighRisk = document.getElementById('adminHighRisk');
+        const adminSlaCompliance = document.getElementById('adminSlaCompliance');
+        
+        // Admin view elements
+        const adminGridViewBtn = document.getElementById('adminGridViewBtn');
+        const adminListViewBtn = document.getElementById('adminListViewBtn');
+        const adminGridView = document.getElementById('adminGridView');
+        const adminListView = document.getElementById('adminListView');
+
+        // Initialize Dashboard
+        function initDashboard() {
+            setupEventListeners();
+            updateNotifications();
+            renderSellerDashboard();
+            updateSellerStats();
+            updateAdminStats();
+            generateInsights();
+            updateDateTime();
+            setInterval(updateDateTime, 60000);
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const dateString = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const dateElement = document.getElementById('currentDate');
+            const timeElement = document.getElementById('currentTime');
+            if (dateElement) dateElement.textContent = dateString;
+            if (timeElement) timeElement.textContent = timeString;
+        }
+
+        function setupEventListeners() {
+            // View switching
+            sellerViewBtn.addEventListener('click', () => switchView('seller'));
+            adminViewBtn.addEventListener('click', () => switchView('admin'));
+            
+            // View mode switching
+            gridViewBtn.addEventListener('click', () => switchViewMode('grid'));
+            listViewBtn.addEventListener('click', () => switchViewMode('list'));
+            
+            // Admin view mode switching
+            adminGridViewBtn.addEventListener('click', () => switchAdminViewMode('grid'));
+            adminListViewBtn.addEventListener('click', () => switchAdminViewMode('list'));
+            
+            // Notification bell click
+            notificationBell.addEventListener('click', toggleNotificationDropdown);
+            
+            // Mark all as read
+            markAllReadBtn.addEventListener('click', markAllNotificationsAsRead);
+            
+            // Close notification dropdown when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!event.target.closest('#notificationBell') && !event.target.closest('#notificationDropdown')) {
+                    notificationDropdown.style.display = 'none';
+                }
+                if (!event.target.closest('#paymentBtn') && !event.target.closest('#paymentDropdown')) {
+                    paymentDropdown.style.display = 'none';
+                }
+            });
+            
+            // Payment dropdown - NO VERIFY PAYMENT OPTION
+            paymentBtn.addEventListener('click', togglePaymentDropdown);
+            downloadInvoiceOption.addEventListener('click', downloadInvoice);
+            generatePackingSlipOption.addEventListener('click', generatePackingSlip);
+            
+            // Seller filters
+            document.getElementById('sellerDateFilter').addEventListener('change', filterSellerOrders);
+            document.getElementById('skuFilter').addEventListener('change', filterSellerOrders);
+            document.getElementById('sizeFilter').addEventListener('change', filterSellerOrders);
+            document.getElementById('partnerFilter').addEventListener('change', filterSellerOrders);
+            document.getElementById('showDelayedBtn').addEventListener('click', showDelayedOrders);
+            document.getElementById('clearFiltersBtn').addEventListener('click', clearSellerFilters);
+            
+            // Seller actions
+            document.getElementById('mergeOrdersBtn').addEventListener('click', mergeOrders);
+            document.getElementById('splitOrderBtn').addEventListener('click', splitOrder);
+            
+            // Admin actions
+            document.getElementById('runQcCheckBtn').addEventListener('click', runQCCheck);
+            document.getElementById('overrideStatusBtn').addEventListener('click', openOverrideModal);
+            
+            // Admin filters
+            document.getElementById('sellerFilter').addEventListener('change', filterAdminOrders);
+            document.getElementById('statusFilter').addEventListener('change', filterAdminOrders);
+            document.getElementById('slaFilter').addEventListener('change', filterAdminOrders);
+            
+            // Modal close listeners
+            setupModalCloseListeners();
+            
+            // Order detail modal
+            document.addEventListener('click', function(event) {
+                if (event.target.id === 'closeOrderDetailModal' || 
+                    event.target.closest('#closeOrderDetailModal') ||
+                    event.target.id === 'closeDetailModal' ||
+                    event.target.closest('#closeDetailModal')) {
+                    document.getElementById('orderDetailModal').classList.add('hidden');
+                }
+            });
+            
+            // Rejection modal
+            document.getElementById('confirmReject').addEventListener('click', confirmReject);
+            document.getElementById('cancelReject').addEventListener('click', () => {
+                document.getElementById('rejectionModal').classList.add('hidden');
+            });
+            
+            // Override modal
+            document.getElementById('confirmOverride').addEventListener('click', confirmOverride);
+            document.getElementById('cancelOverride').addEventListener('click', () => {
+                document.getElementById('overrideModal').classList.add('hidden');
+            });
+            
+            // Payment verification modal
+            document.getElementById('cancelPaymentVerification').addEventListener('click', () => {
+                document.getElementById('paymentVerificationModal').classList.add('hidden');
+            });
+            document.getElementById('confirmPaymentVerification').addEventListener('click', confirmPaymentVerification);
+            
+            // Packing slip modal
+            document.getElementById('cancelPackingSlip').addEventListener('click', () => {
+                document.getElementById('packingSlipModal').classList.add('hidden');
+            });
+            document.getElementById('confirmPackingSlip').addEventListener('click', confirmPackingSlip);
+            
+            // Select all checkbox
+            document.getElementById('selectAllOrders').addEventListener('change', toggleSelectAll);
+            
+            // Refresh button
+            document.getElementById('refreshBtn').addEventListener('click', handleRefresh);
+        }
+
+        function setupModalCloseListeners() {
+            document.addEventListener('click', function(event) {
+                if (event.target.id === 'closeOrderActionModal' || 
+                    event.target.closest('#closeOrderActionModal') ||
+                    event.target.id === 'cancelModalAction' ||
+                    event.target.closest('#cancelModalAction')) {
+                    document.getElementById('orderActionModal').classList.add('hidden');
+                }
+                if (event.target.id === 'cancelReject' || event.target.closest('#cancelReject')) {
+                    document.getElementById('rejectionModal').classList.add('hidden');
+                }
+                if (event.target.id === 'cancelOverride' || event.target.closest('#cancelOverride')) {
+                    document.getElementById('overrideModal').classList.add('hidden');
+                }
+                if (event.target.id === 'cancelPaymentVerification' || event.target.closest('#cancelPaymentVerification')) {
+                    document.getElementById('paymentVerificationModal').classList.add('hidden');
+                }
+                if (event.target.id === 'cancelPackingSlip' || event.target.closest('#cancelPackingSlip')) {
+                    document.getElementById('packingSlipModal').classList.add('hidden');
+                }
+            });
+        }
+
+        function togglePaymentDropdown() {
+            if (paymentDropdown.style.display === 'block') {
+                paymentDropdown.style.display = 'none';
+            } else {
+                paymentDropdown.style.display = 'block';
+                notificationDropdown.style.display = 'none';
+            }
+        }
+
+        function toggleNotificationDropdown() {
+            if (notificationDropdown.style.display === 'block') {
+                notificationDropdown.style.display = 'none';
+            } else {
+                notificationDropdown.style.display = 'block';
+                notificationHeader.textContent = `Notifications (${currentRole === 'seller' ? 'Seller' : 'Admin'})`;
+                updateNotifications();
+                paymentDropdown.style.display = 'none';
+            }
+        }
+
+        function updateNotifications() {
+            const notifications = currentRole === 'seller' ? sellerNotifications : adminNotifications;
+            const unreadCount = notifications.filter(n => !n.read).length;
+            notificationCount.textContent = unreadCount;
+            
+            notificationList.innerHTML = '';
+            
+            if (notifications.length === 0) {
+                notificationList.innerHTML = `
+                    <div class="p-8 text-center">
+                        <i class="fas fa-bell-slash text-3xl mb-3" style="color:#4B5563;"></i>
+                        <p style="color:#9CA3AF;">No notifications</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            notifications.forEach(notification => {
+                const notificationItem = document.createElement('div');
+                notificationItem.className = `notification-item ${notification.read ? '' : 'unread'}`;
+                
+                notificationItem.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="mr-3 mt-1">
+                            ${notification.type === 'order_accepted' ? 
+                                '<i class="fas fa-check-circle text-green-500"></i>' : 
+                                notification.type === 'order_rejected' ? 
+                                '<i class="fas fa-times-circle text-red-500"></i>' :
+                                notification.type === 'payment_verified' ?
+                                '<i class="fas fa-credit-card text-blue-500"></i>' :
+                                notification.type === 'invoice_generated' ?
+                                '<i class="fas fa-file-invoice text-purple-500"></i>' :
+                                notification.type === 'packing_slip_generated' ?
+                                '<i class="fas fa-box text-orange-500"></i>' :
+                                notification.type === 'sla_breached' ?
+                                '<i class="fas fa-exclamation-triangle text-red-500"></i>' :
+                                notification.type === 'status_updated' ?
+                                '<i class="fas fa-sync-alt text-blue-500"></i>' :
+                                '<i class="fas fa-exclamation-triangle text-yellow-500"></i>'}
+                        </div>
+                        <div class="flex-grow">
+                            <h4 class="font-medium" style="color:white;">${notification.title}</h4>
+                            <p class="text-sm mt-1" style="color:#B0D0FF;">${notification.message}</p>
+                            <p class="text-xs mt-2" style="color:#9CA3AF;">${notification.timestamp}</p>
+                        </div>
+                        ${!notification.read ? '<div class="w-2 h-2 bg-blue-500 rounded-full"></div>' : ''}
+                    </div>
+                `;
+                
+                notificationItem.addEventListener('click', (e) => {
+                    markNotificationAsRead(notification.id);
+                    if (notification.orderId) {
+                        showOrderDetail(notification.orderId);
+                        notificationDropdown.style.display = 'none';
+                    }
+                });
+                
+                notificationList.appendChild(notificationItem);
+            });
+        }
+
+        function markNotificationAsRead(notificationId) {
+            const notifications = currentRole === 'seller' ? sellerNotifications : adminNotifications;
+            const notification = notifications.find(n => n.id === notificationId);
+            if (notification && !notification.read) {
+                notification.read = true;
+                updateNotifications();
+            }
+        }
+
+        function markAllNotificationsAsRead() {
+            const notifications = currentRole === 'seller' ? sellerNotifications : adminNotifications;
+            notifications.forEach(notification => {
+                notification.read = true;
+            });
+            updateNotifications();
+        }
+
+        function addNotification(type, title, message, orderId = null, seller = null, targetRole = 'both') {
+            const now = new Date();
+            const timestamp = `${now.toLocaleDateString()} ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            
+            if (targetRole === 'admin' || targetRole === 'both') {
+                const newAdminNotification = {
+                    id: adminNotifications.length + 1,
+                    type,
+                    title,
+                    message,
+                    timestamp,
+                    read: false,
+                    orderId,
+                    seller
+                };
+                adminNotifications.unshift(newAdminNotification);
+            }
+            
+            if (targetRole === 'seller' || targetRole === 'both') {
+                const newSellerNotification = {
+                    id: sellerNotifications.length + 1,
+                    type,
+                    title,
+                    message,
+                    timestamp,
+                    read: false,
+                    orderId
+                };
+                sellerNotifications.unshift(newSellerNotification);
+            }
+            
+            updateNotifications();
+            
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, {
+                    body: message,
+                    icon: '/favicon.ico'
+                });
+            }
+        }
+
+        function switchViewMode(mode) {
+            currentViewMode = mode;
+            
+            if (mode === 'grid') {
+                ordersGridView.classList.remove('hidden');
+                ordersListView.classList.add('hidden');
+                gridViewBtn.style.background = 'rgba(255,47,163,0.3)';
+                gridViewBtn.style.border = '1px solid #FF2FA3';
+                listViewBtn.style.background = 'rgba(10,27,46,0.6)';
+                listViewBtn.style.border = '1px solid rgba(255,255,255,0.08)';
+            } else {
+                ordersGridView.classList.add('hidden');
+                ordersListView.classList.remove('hidden');
+                gridViewBtn.style.background = 'rgba(10,27,46,0.6)';
+                gridViewBtn.style.border = '1px solid rgba(255,255,255,0.08)';
+                listViewBtn.style.background = 'rgba(255,47,163,0.3)';
+                listViewBtn.style.border = '1px solid #FF2FA3';
+            }
+            
+            renderSellerDashboard();
+        }
+
+        function switchAdminViewMode(mode) {
+            adminCurrentViewMode = mode;
+            
+            if (mode === 'grid') {
+                adminGridView.classList.remove('hidden');
+                adminListView.classList.add('hidden');
+                adminGridViewBtn.className = 'view-toggle-btn active';
+                adminListViewBtn.className = 'view-toggle-btn';
+            } else {
+                adminGridView.classList.add('hidden');
+                adminListView.classList.remove('hidden');
+                adminGridViewBtn.className = 'view-toggle-btn';
+                adminListViewBtn.className = 'view-toggle-btn active';
+            }
+            
+            renderAdminDashboard();
+        }
+
+        function switchView(view) {
+            currentRole = view;
+            
+            if (view === 'seller') {
+                sellerDashboard.classList.remove('hidden');
+                adminDashboard.classList.add('hidden');
+                sellerViewBtn.style.background = 'rgba(255,47,163,0.25)';
+                sellerViewBtn.style.borderColor = '#FF2FA3';
+                adminViewBtn.style.background = 'transparent';
+                adminViewBtn.style.borderColor = 'rgba(255,47,163,0.2)';
+                currentRoleDisplay.textContent = 'Seller';
+                renderSellerDashboard();
+            } else {
+                sellerDashboard.classList.add('hidden');
+                adminDashboard.classList.remove('hidden');
+                sellerViewBtn.style.background = 'transparent';
+                sellerViewBtn.style.borderColor = 'rgba(255,47,163,0.2)';
+                adminViewBtn.style.background = 'rgba(255,47,163,0.25)';
+                adminViewBtn.style.borderColor = '#FF2FA3';
+                currentRoleDisplay.textContent = 'Admin';
+                renderAdminDashboard();
+            }
+            
+            updateNotifications();
+        }
+
+        function renderSellerDashboard() {
+            ordersGridView.innerHTML = '';
+            sellerOrdersBody.innerHTML = '';
+            customerNotesContainer.innerHTML = '';
+            
+            const filteredOrders = filterOrdersForSeller();
+            
+            filteredOrders.forEach(order => {
+                const statusClass = `status-${order.status.toLowerCase().replace(' ', '-')}`;
+                const statusText = order.status;
+                
+                // Grid View Card
+                if (currentViewMode === 'grid') {
+                    const card = document.createElement('div');
+                    card.className = 'order-card card-hover';
+                    
+                    const paymentIndicator = order.paymentVerified ? 
+                        `<div class="absolute top-3 left-3">
+                            <span class="badge payment-status-paid text-xs">Paid</span>
+                        </div>` : 
+                        `<div class="absolute top-3 left-3">
+                            <span class="badge payment-status-pending text-xs">Pending</span>
+                        </div>`;
+                    
+                    card.innerHTML = `
+                        <div class="relative">
+                            <img src="${order.mainImage}" 
+                                 alt="Product" 
+                                 class="order-image">
+                            ${paymentIndicator}
+                            <div class="absolute top-3 right-3">
+                                <input type="checkbox" class="order-checkbox rounded-full border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5" value="${order.id}">
+                            </div>
+                            <div class="absolute bottom-3 left-3">
+                                <span class="badge ${statusClass}">${statusText}</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h4 class="font-bold" style="color:white;">${order.id}</h4>
+                                    <p class="text-sm" style="color:#B0D0FF;">${order.date}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold" style="color:white;">${order.total}</p>
+                                    <p class="text-xs" style="color:#9CA3AF;">${order.items.length} item${order.items.length > 1 ? 's' : ''}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <p class="font-medium mb-1" style="color:white;">${order.customer}</p>
+                                <p class="text-sm" style="color:#B0D0FF;">${order.skuDetails}</p>
+                                ${order.paymentVerified ? 
+                                    `<p class="text-xs text-green-500 mt-1"><i class="fas fa-check-circle mr-1"></i>Payment Verified</p>` : 
+                                    order.status === "Accepted" ? 
+                                    `<p class="text-xs" style="color:#FFB86B;"><i class="fas fa-clock mr-1"></i>Awaiting Payment</p>` :
+                                    ''}
+                            </div>
+                            
+                            <div class="space-y-2 mb-4">
+                                ${order.items.slice(0, 2).map(item => `
+                                    <div class="product-item">
+                                        <img src="${item.image}" 
+                                             alt="${item.sku}" 
+                                             class="product-image-small">
+                                        <div class="flex-grow">
+                                            <p class="text-sm font-medium" style="color:white;">${item.sku} (${item.size})</p>
+                                            <p class="text-xs" style="color:#B0D0FF;">Color: ${item.color} • Qty: ${item.quantity}</p>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                                ${order.items.length > 2 ? `
+                                    <p class="text-xs text-center" style="color:#9CA3AF;">+${order.items.length - 2} more items</p>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="flex justify-between space-x-2">
+                                ${order.status === "Pending" ? `
+                                    <button class="text-blue-600 hover:text-blue-900 confirm-order-btn text-sm font-medium px-3 py-1 rounded-lg" data-id="${order.id}" style="background:rgba(59,130,246,0.2); border:1px solid #3B82F6; color:#93C5FD;">
+                                        <i class="fas fa-check mr-1"></i>Accept
+                                    </button>
+                                ` : order.status === "Accepted" && !order.paymentVerified ? `
+                                    <button class="text-gray-400 text-sm font-medium px-3 py-1 rounded-lg cursor-not-allowed" disabled style="background:rgba(75,85,99,0.2); border:1px solid #6B7280; color:#9CA3AF;">
+                                        <i class="fas fa-clock mr-1"></i>Awaiting Payment
+                                    </button>
+                                ` : order.status === "Accepted" && order.paymentVerified ? `
+                                    <button class="text-green-600 hover:text-green-900 next-status-btn text-sm font-medium px-3 py-1 rounded-lg" data-id="${order.id}" style="background:rgba(16,185,129,0.2); border:1px solid #10B981; color:#A7F3D0;">
+                                        <i class="fas fa-arrow-right mr-1"></i>Process
+                                    </button>
+                                ` : order.status !== "Delivered" && order.paymentVerified ? `
+                                    <button class="text-green-600 hover:text-green-900 next-status-btn text-sm font-medium px-3 py-1 rounded-lg" data-id="${order.id}" style="background:rgba(16,185,129,0.2); border:1px solid #10B981; color:#A7F3D0;">
+                                        <i class="fas fa-arrow-right mr-1"></i>Next
+                                    </button>
+                                ` : ''}
+                                
+                                ${order.status === "Pending" || order.status === "Accepted" ? `
+                                    <button class="text-red-600 hover:text-red-900 reject-order-btn text-sm font-medium px-3 py-1 rounded-lg" data-id="${order.id}" style="background:rgba(239,68,68,0.2); border:1px solid #EF4444; color:#FCA5A5;">
+                                        <i class="fas fa-times mr-1"></i>Reject
+                                    </button>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="mt-4 pt-3 border-t border-gray-700">
+                                <button class="view-order-detail-btn text-sm font-medium w-full text-center" data-id="${order.id}" style="color:#FF4CC9;">
+                                    <i class="fas fa-eye mr-1"></i> View Details
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    ordersGridView.appendChild(card);
+                }
+                
+                // List View Row
+                else {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-700/30';
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <input type="checkbox" class="order-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500" value="${order.id}">
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium" style="color:white;">${order.id}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm" style="color:#B0D0FF;">${order.date}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium" style="color:white;">${order.customer}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm" style="color:#B0D0FF;">${order.skuDetails}</div>
+                            <div class="text-xs" style="color:#9CA3AF;">${order.items.length} item${order.items.length > 1 ? 's' : ''}</div>
+                            ${order.paymentVerified ? 
+                                `<div class="text-xs text-green-500"><i class="fas fa-check-circle mr-1"></i>Paid</div>` : 
+                                order.status === "Accepted" ? 
+                                `<div class="text-xs" style="color:#FFB86B;"><i class="fas fa-clock mr-1"></i>Pending Payment</div>` :
+                                ''}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="badge ${statusClass}">${statusText}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-bold" style="color:white;">${order.total}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex space-x-2">
+                                ${order.status === "Pending" ? `
+                                    <button class="text-blue-400 hover:text-blue-300 confirm-order-btn" data-id="${order.id}">
+                                        <i class="fas fa-check mr-1"></i>Accept
+                                    </button>
+                                ` : order.status === "Accepted" && !order.paymentVerified ? `
+                                    <span class="text-gray-500 cursor-not-allowed">Awaiting Payment</span>
+                                ` : order.status === "Accepted" && order.paymentVerified ? `
+                                    <button class="text-green-400 hover:text-green-300 next-status-btn" data-id="${order.id}">
+                                        <i class="fas fa-arrow-right mr-1"></i>Process
+                                    </button>
+                                ` : order.status !== "Delivered" && order.paymentVerified ? `
+                                    <button class="text-green-400 hover:text-green-300 next-status-btn" data-id="${order.id}">
+                                        <i class="fas fa-arrow-right mr-1"></i>Next
+                                    </button>
+                                ` : ''}
+                                
+                                ${order.status === "Pending" || order.status === "Accepted" ? `
+                                    <button class="text-red-400 hover:text-red-300 reject-order-btn" data-id="${order.id}">
+                                        <i class="fas fa-times mr-1"></i>Reject
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </td>
+                    `;
+                    
+                    sellerOrdersBody.appendChild(row);
+                }
+                
+                // Add customer notes if exists
+                if (order.customerNotes) {
+                    const noteCard = document.createElement('div');
+                    noteCard.className = 'p-4 rounded-xl risk-medium';
+                    noteCard.innerHTML = `
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3" style="background:rgba(182,109,255,0.2); border:1px solid #B66DFF;">
+                                <i class="fas fa-user" style="color:#B66DFF;"></i>
+                            </div>
+                            <div class="flex-grow">
+                                <h4 class="font-medium" style="color:white;">${order.customer} - ${order.id}</h4>
+                                <p class="text-sm mt-1" style="color:#B0D0FF;">${order.customerNotes}</p>
+                            </div>
+                        </div>
+                    `;
+                    customerNotesContainer.appendChild(noteCard);
+                }
+            });
+            
+            attachOrderEventListeners();
+            ordersCount.textContent = `${filteredOrders.length} orders`;
+            updateSellerStats();
+        }
+
+        function showOrderDetail(orderId) {
+            const order = mockData.find(o => o.id === orderId);
+            if (!order) return;
+            
+            document.getElementById('detailOrderId').textContent = `Order ${order.id}`;
+            document.getElementById('detailCustomer').textContent = order.customer;
+            document.getElementById('detailMainImage').src = order.mainImage;
+            
+            const itemsContainer = document.getElementById('detailItemsContainer');
+            itemsContainer.innerHTML = order.items.map(item => `
+                <div class="flex items-center p-3 border rounded-xl" style="border-color:rgba(255,47,163,0.2); background:rgba(10,27,46,0.4);">
+                    <img src="${item.image}" 
+                         alt="${item.sku}" 
+                         class="w-16 h-16 object-cover rounded-lg mr-3">
+                    <div class="flex-grow">
+                        <h5 class="font-medium" style="color:white;">${item.sku} (${item.size})</h5>
+                        <p class="text-sm" style="color:#B0D0FF;">Color: ${item.color}</p>
+                        <p class="text-sm" style="color:#B0D0FF;">Quantity: ${item.quantity}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm" style="color:#9CA3AF;">${item.sku === 'SKU001' ? '$49.99' : item.sku === 'SKU002' ? '$39.99' : '$79.99'} each</p>
+                    </div>
+                </div>
+            `).join('');
+            
+            const infoContainer = document.getElementById('detailInfoContainer');
+            const statusClass = `status-${order.status.toLowerCase().replace(' ', '-')}`;
+            
+            infoContainer.innerHTML = `
+                <div class="flex justify-between">
+                    <span style="color:#B0D0FF;">Status:</span>
+                    <span class="badge ${statusClass}">${order.status}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span style="color:#B0D0FF;">Payment Status:</span>
+                    ${order.paymentVerified ? 
+                        `<span class="badge payment-status-paid">Verified</span>` : 
+                        `<span class="badge payment-status-pending">Pending</span>`}
+                </div>
+                ${order.paymentVerified ? `
+                <div class="flex justify-between">
+                    <span style="color:#B0D0FF;">Payment Method:</span>
+                    <span class="font-medium" style="color:white;">${formatPaymentMethod(order.paymentMethod)}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span style="color:#B0D0FF;">Payment Reference:</span>
+                    <span class="font-medium" style="color:white;">${order.paymentReference}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span style="color:#B0D0FF;">Payment Date:</span>
+                    <span class="font-medium" style="color:white;">${formatDate(order.paymentDate)}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span style="color:#B0D0FF;">Verified By:</span>
+                    <span class="font-medium" style="color:white;">${order.paymentVerifiedBy}</span>
+                </div>
+                ` : ''}
+                <div class="flex justify-between">
+                    <span style="color:#B0D0FF;">Order Date:</span>
+                    <span class="font-medium" style="color:white;">${order.date}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span style="color:#B0D0FF;">Total Amount:</span>
+                    <span class="font-bold" style="color:white;">${order.total}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span style="color:#B0D0FF;">Seller:</span>
+                    <span class="font-medium" style="color:white;">${order.seller}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span style="color:#B0D0FF;">Fulfillment Partner:</span>
+                    <span class="font-medium" style="color:white;">${order.fulfillmentPartner}</span>
+                </div>
+                ${order.invoiceAutoGenerated ? `
+                <div class="mt-3 pt-3 border-t" style="border-color:rgba(255,47,163,0.2);">
+                    <p class="text-sm text-green-500 mb-1"><i class="fas fa-file-invoice mr-1"></i> Invoice Auto-Generated</p>
+                    <p class="text-xs" style="color:#9CA3AF;">Invoice was automatically generated after payment verification</p>
+                </div>
+                ` : ''}
+                ${order.packingSlipGenerated ? `
+                <div class="mt-2 pt-2 border-t" style="border-color:rgba(255,47,163,0.2);">
+                    <p class="text-sm text-blue-500 mb-1"><i class="fas fa-box mr-1"></i> Packing Slip Auto-Generated</p>
+                    <p class="text-xs" style="color:#9CA3AF;">Packing slip was automatically generated when order reached Packed status</p>
+                </div>
+                ` : ''}
+                ${order.notes ? `
+                <div class="mt-3 pt-3 border-t" style="border-color:rgba(255,47,163,0.2);">
+                    <p class="text-sm" style="color:#B0D0FF;">Order Notes:</p>
+                    <p class="text-sm" style="color:white;">${order.notes}</p>
+                </div>
+                ` : ''}
+                ${order.customerNotes ? `
+                <div class="mt-2">
+                    <p class="text-sm" style="color:#B0D0FF;">Customer Notes:</p>
+                    <p class="text-sm" style="color:white;">${order.customerNotes}</p>
+                </div>
+                ` : ''}
+            `;
+            
+            const actionsContainer = document.getElementById('detailActionsContainer');
+            actionsContainer.innerHTML = `
+                ${order.status === "Pending" ? `
+                    <button class="w-full py-3 rounded-lg confirm-order-btn" data-id="${order.id}" style="background:rgba(59,130,246,0.2); border:1px solid #3B82F6; color:#93C5FD;">
+                        <i class="fas fa-check mr-2"></i> Accept Order
+                    </button>
+                ` : order.status === "Accepted" && !order.paymentVerified ? `
+                    <button class="w-full rounded-lg py-3 cursor-not-allowed" disabled style="background:rgba(75,85,99,0.2); border:1px solid #6B7280; color:#9CA3AF;">
+                        <i class="fas fa-clock mr-2"></i> Awaiting Payment Verification
+                    </button>
+                ` : order.status === "Accepted" && order.paymentVerified ? `
+                    <button class="w-full rounded-lg py-3 next-status-btn" data-id="${order.id}" style="background:rgba(16,185,129,0.2); border:1px solid #10B981; color:#A7F3D0;">
+                        <i class="fas fa-arrow-right mr-2"></i> Process Order
+                    </button>
+                ` : order.status !== "Delivered" && order.paymentVerified ? `
+                    <button class="w-full rounded-lg py-3 next-status-btn" data-id="${order.id}" style="background:rgba(16,185,129,0.2); border:1px solid #10B981; color:#A7F3D0;">
+                        <i class="fas fa-arrow-right mr-2"></i> Update Status
+                    </button>
+                ` : ''}
+                
+                ${order.status === "Pending" || order.status === "Accepted" ? `
+                    <button class="w-full rounded-lg py-3 reject-order-btn" data-id="${order.id}" style="background:rgba(239,68,68,0.2); border:1px solid #EF4444; color:#FCA5A5;">
+                        <i class="fas fa-times mr-2"></i> Reject Order
+                    </button>
+                ` : ''}
+                
+                ${currentRole === 'admin' && order.status === "Accepted" && !order.paymentVerified ? `
+                    <button class="w-full rounded-lg py-3 verify-payment-btn" data-id="${order.id}" style="background:rgba(28,200,200,0.2); border:1px solid #1CC8C8; color:#A7F3D0;">
+                        <i class="fas fa-credit-card mr-2"></i> Verify Payment
+                    </button>
+                ` : ''}
+            `;
+            
+            document.getElementById('orderDetailModal').classList.remove('hidden');
+            attachOrderEventListeners();
+            attachModalCloseListenersForDetailModal();
+        }
+
+        function attachModalCloseListenersForDetailModal() {
+            const closeOrderDetailModalBtn = document.getElementById('closeOrderDetailModal');
+            const closeDetailModalBtn = document.getElementById('closeDetailModal');
+            
+            if (closeOrderDetailModalBtn) {
+                closeOrderDetailModalBtn.onclick = () => {
+                    document.getElementById('orderDetailModal').classList.add('hidden');
+                };
+            }
+            
+            if (closeDetailModalBtn) {
+                closeDetailModalBtn.onclick = () => {
+                    document.getElementById('orderDetailModal').classList.add('hidden');
+                };
+            }
+        }
+
+        function renderAdminDashboard() {
+            adminGridView.innerHTML = '';
+            adminOrdersBody.innerHTML = '';
+            alertsContainer.innerHTML = '';
+            
+            const filteredOrders = filterOrdersForAdmin();
+            
+            const highRiskOrders = mockData.filter(order => order.isHighRisk);
+            const delayedOrders = mockData.filter(order => order.isDelayed);
+            
+            if (highRiskOrders.length > 0) {
+                highRiskOrders.forEach(order => {
+                    const alertCard = document.createElement('div');
+                    alertCard.className = 'p-4 rounded-xl risk-high';
+                    alertCard.innerHTML = `
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3" style="background:rgba(255,47,163,0.2); border:1px solid #FF2FA3;">
+                                <i class="fas fa-exclamation-triangle" style="color:#FF2FA3;"></i>
+                            </div>
+                            <div class="flex-grow">
+                                <h4 class="font-medium" style="color:white;">High Risk Alert - ${order.id}</h4>
+                                <p class="text-sm" style="color:#B0D0FF;">${order.customer} • ${order.seller} • ${order.risk} risk</p>
+                            </div>
+                            <button class="text-sm font-medium view-order-btn" data-id="${order.id}" style="color:#FF4CC9;">View</button>
+                        </div>
+                    `;
+                    alertsContainer.appendChild(alertCard);
+                });
+            }
+            
+            if (delayedOrders.length > 0) {
+                delayedOrders.forEach(order => {
+                    const alertCard = document.createElement('div');
+                    alertCard.className = 'p-4 rounded-xl risk-medium';
+                    alertCard.innerHTML = `
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3" style="background:rgba(182,109,255,0.2); border:1px solid #B66DFF;">
+                                <i class="fas fa-clock" style="color:#B66DFF;"></i>
+                            </div>
+                            <div class="flex-grow">
+                                <h4 class="font-medium" style="color:white;">SLA Delay - ${order.id}</h4>
+                                <p class="text-sm" style="color:#B0D0FF;">${order.sla}+ hours delayed • ${order.seller}</p>
+                            </div>
+                            <button class="text-sm font-medium view-order-btn" data-id="${order.id}" style="color:#FF4CC9;">View</button>
+                        </div>
+                    `;
+                    alertsContainer.appendChild(alertCard);
+                });
+            }
+            
+            if (highRiskOrders.length === 0 && delayedOrders.length === 0) {
+                const noAlerts = document.createElement('div');
+                noAlerts.className = 'p-4 rounded-xl text-center';
+                noAlerts.style.background = 'rgba(28,200,200,0.1)';
+                noAlerts.style.border = '1px solid #1CC8C8';
+                noAlerts.innerHTML = `
+                    <i class="fas fa-check-circle text-2xl mb-2" style="color:#1CC8C8;"></i>
+                    <p class="font-medium" style="color:white;">No active alerts</p>
+                    <p class="text-sm" style="color:#B0D0FF;">All systems are running smoothly</p>
+                `;
+                alertsContainer.appendChild(noAlerts);
+            }
+            
+            filteredOrders.forEach(order => {
+                const statusClass = `status-${order.status.toLowerCase().replace(' ', '-')}`;
+                const slaClass = order.sla !== 'normal' ? `sla-${order.sla}` : 'bg-gray-100 text-gray-800';
+                const riskClass = `risk-${order.risk}`;
+                const slaText = order.sla === 'normal' ? 'On Time' : `${order.sla}+ hours`;
+                
+                if (adminCurrentViewMode === 'grid') {
+                    const card = document.createElement('div');
+                    card.className = 'admin-order-card card-hover';
+                    
+                    const paymentIndicator = order.paymentVerified ? 
+                        `<div class="absolute top-3 left-3">
+                            <span class="admin-badge payment-status-paid">Paid</span>
+                        </div>` : 
+                        `<div class="absolute top-3 left-3">
+                            <span class="admin-badge payment-status-pending">Pending</span>
+                        </div>`;
+                    
+                    const riskIndicator = order.risk === 'high' ? 
+                        `<div class="absolute top-3 right-3">
+                            <span class="admin-badge" style="background: rgba(255,47,163,0.3); border:1px solid #FF2FA3; color:white;">High Risk</span>
+                        </div>` : 
+                        order.risk === 'medium' ? 
+                        `<div class="absolute top-3 right-3">
+                            <span class="admin-badge" style="background: rgba(182,109,255,0.3); border:1px solid #B66DFF; color:white;">Medium Risk</span>
+                        </div>` : '';
+                    
+                    card.innerHTML = `
+                        <div class="relative">
+                            <img src="${order.mainImage}" 
+                                 alt="Product" 
+                                 class="admin-order-image">
+                            ${paymentIndicator}
+                            ${riskIndicator}
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h4 class="font-bold" style="color:white;">${order.id}</h4>
+                                    <p class="text-sm" style="color:#B0D0FF;">${order.date} • ${order.seller}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold" style="color:white;">${order.total}</p>
+                                    <p class="text-xs" style="color:#9CA3AF;">${order.items.length} item${order.items.length > 1 ? 's' : ''}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <p class="font-medium mb-1" style="color:white;">${order.customer}</p>
+                                <p class="text-sm" style="color:#B0D0FF;">${order.skuDetails}</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-3 gap-2 mb-4">
+                                <span class="admin-badge ${statusClass}">${order.status}</span>
+                                <span class="admin-badge ${slaClass}">${slaText}</span>
+                                <span class="admin-badge ${riskClass}">${order.risk.toUpperCase()}</span>
+                            </div>
+                            
+                            <div class="space-y-2 mb-4">
+                                ${order.items.slice(0, 2).map(item => `
+                                    <div class="flex items-center p-2 rounded-lg" style="background:rgba(10,27,46,0.6);">
+                                        <img src="${item.image}" 
+                                             alt="${item.sku}" 
+                                             class="w-8 h-8 object-cover rounded-md mr-2">
+                                        <div class="flex-grow">
+                                            <p class="text-xs font-medium" style="color:white;">${item.sku} (${item.size})</p>
+                                            <p class="text-xs" style="color:#B0D0FF;">Qty: ${item.quantity}</p>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                                ${order.items.length > 2 ? `
+                                    <p class="text-xs text-center" style="color:#9CA3AF;">+${order.items.length - 2} more items</p>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="flex justify-between space-x-2">
+                                <button class="view-order-btn text-sm font-medium px-3 py-2 rounded-lg flex-grow" data-id="${order.id}" style="background:rgba(255,47,163,0.2); border:1px solid #FF4CC9; color:#FF4CC9;">
+                                    <i class="fas fa-eye mr-1"></i> View Details
+                                </button>
+                                
+                                ${order.status === "Accepted" && !order.paymentVerified ? `
+                                    <button class="verify-payment-btn text-sm font-medium px-3 py-2 rounded-lg" data-id="${order.id}" style="background:rgba(28,200,200,0.2); border:1px solid #1CC8C8; color:#A7F3D0;">
+                                        <i class="fas fa-credit-card mr-1"></i> Verify Payment
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                    adminGridView.appendChild(card);
+                }
+                else {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-700/30';
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium" style="color:white;">${order.id}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm" style="color:#B0D0FF;">${order.seller}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm" style="color:#B0D0FF;">${order.date}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium" style="color:white;">${order.customer}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm" style="color:#B0D0FF;">${order.skuDetails}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="badge ${statusClass}">${order.status}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            ${order.paymentVerified ? 
+                                `<span class="badge payment-status-paid">Verified</span>` : 
+                                `<span class="badge payment-status-pending">Pending</span>`}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="badge ${slaClass}">${slaText}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="badge ${riskClass}">${order.risk.toUpperCase()}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            ${order.status === "Accepted" && !order.paymentVerified ? `
+                                <button class="verify-payment-btn mr-2 px-3 py-1 rounded-lg" data-id="${order.id}" style="background:rgba(28,200,200,0.2); border:1px solid #1CC8C8; color:#A7F3D0;">
+                                    <i class="fas fa-credit-card mr-1"></i>Verify Payment
+                                </button>
+                            ` : ''}
+                        </td>
+                    `;
+                    
+                    adminOrdersBody.appendChild(row);
+                }
+            });
+            
+            attachOrderEventListeners();
+            adminOrdersCount.textContent = `${filteredOrders.length} orders`;
+            updateAdminStats();
+        }
+
+        function attachOrderEventListeners() {
+            document.querySelectorAll('.confirm-order-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const orderId = e.target.closest('button').dataset.id;
+                    confirmOrder(orderId);
+                });
+            });
+            
+            document.querySelectorAll('.reject-order-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const orderId = e.target.closest('button').dataset.id;
+                    showRejectionModal(orderId);
+                });
+            });
+            
+            document.querySelectorAll('.next-status-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const orderId = e.target.closest('button').dataset.id;
+                    updateOrderStatus(orderId);
+                });
+            });
+            
+            document.querySelectorAll('.view-order-btn, .view-order-detail-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const orderId = e.target.closest('button').dataset.id;
+                    showOrderDetail(orderId);
+                });
+            });
+            
+            document.querySelectorAll('.verify-payment-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const orderId = e.target.closest('button').dataset.id;
+                    openPaymentVerificationModalForOrder(orderId);
+                });
+            });
+            
+            document.querySelectorAll('.order-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedOrders);
+            });
+        }
+
+        function updateSelectedOrders() {
+            selectedOrders = Array.from(document.querySelectorAll('.order-checkbox:checked'))
+                .map(cb => cb.value);
+        }
+
+        function toggleSelectAll(e) {
+            const checkboxes = document.querySelectorAll('.order-checkbox');
+            checkboxes.forEach(cb => cb.checked = e.target.checked);
+            updateSelectedOrders();
+        }
+
+        function filterOrdersForSeller() {
+            const dateFilter = document.getElementById('sellerDateFilter').value;
+            const skuFilter = document.getElementById('skuFilter').value;
+            const sizeFilter = document.getElementById('sizeFilter').value;
+            const partnerFilter = document.getElementById('partnerFilter').value;
+            
+            return mockData.filter(order => {
+                if (dateFilter && order.date !== dateFilter) return false;
+                if (skuFilter && !order.skuDetails.includes(skuFilter)) return false;
+                if (sizeFilter && !order.skuDetails.includes(`(${sizeFilter})`)) return false;
+                if (partnerFilter && order.fulfillmentPartner !== partnerFilter) return false;
+                return true;
+            });
+        }
+
+        function filterOrdersForAdmin() {
+            const sellerFilter = document.getElementById('sellerFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const slaFilter = document.getElementById('slaFilter').value;
+            
+            return mockData.filter(order => {
+                if (sellerFilter && order.seller !== sellerFilter) return false;
+                if (statusFilter && order.status !== statusFilter) return false;
+                if (slaFilter && order.sla !== slaFilter) return false;
+                return true;
+            });
+        }
+
+        function filterSellerOrders() {
+            renderSellerDashboard();
+        }
+
+        function filterAdminOrders() {
+            renderAdminDashboard();
+        }
+
+        function showDelayedOrders() {
+            const delayedOrders = mockData.filter(order => order.isDelayed);
+            
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <p class="mb-4" style="color:#B0D0FF;">Showing ${delayedOrders.length} delayed orders:</p>
+                <div class="space-y-3 max-h-60 overflow-y-auto">
+                    ${delayedOrders.map(order => `
+                        <div class="p-3 border rounded-xl" style="border-color:#FF2FA3; background:rgba(255,47,163,0.1);">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="font-medium" style="color:white;">${order.id}</p>
+                                    <p class="text-sm" style="color:#B0D0FF;">${order.customer} • ${order.seller}</p>
+                                </div>
+                                <span class="badge" style="background:rgba(255,47,163,0.3); border:1px solid #FF2FA3;">${order.sla}+ hours</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            document.getElementById('modalTitle').textContent = 'Delayed Orders';
+            document.getElementById('orderActionModal').classList.remove('hidden');
+        }
+
+        function clearSellerFilters() {
+            document.getElementById('sellerDateFilter').value = '';
+            document.getElementById('skuFilter').value = '';
+            document.getElementById('sizeFilter').value = '';
+            document.getElementById('partnerFilter').value = '';
+            document.getElementById('showDelayedBtn').classList.remove('active');
+            renderSellerDashboard();
+        }
+
+        function downloadInvoice() {
+            if (selectedOrders.length === 0) {
+                alert('Please select at least 1 order to download invoice');
+                paymentDropdown.style.display = 'none';
+                return;
+            }
+            
+            paymentDropdown.style.display = 'none';
+            
+            const ordersWithoutInvoice = selectedOrders.filter(orderId => {
+                const order = mockData.find(o => o.id === orderId);
+                return order && !order.invoiceAutoGenerated;
+            });
+            
+            if (ordersWithoutInvoice.length > 0) {
+                const modalBody = document.getElementById('modalBody');
+                modalBody.innerHTML = `
+                    <div class="text-center py-6">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background:rgba(255,47,163,0.2); border:1px solid #FF2FA3;">
+                            <i class="fas fa-exclamation-triangle text-xl" style="color:#FF2FA3;"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-2" style="color:white;">Invoice Not Generated</h4>
+                        <p class="mb-6" style="color:#B0D0FF;">Invoices for ${ordersWithoutInvoice.length} selected order(s) have not been generated yet.</p>
+                        <div class="space-y-3 mb-6">
+                            ${ordersWithoutInvoice.map(id => `<p class="text-sm" style="color:white;">• ${id}</p>`).join('')}
+                        </div>
+                        <p class="text-sm" style="color:#9CA3AF;">Invoices are automatically generated when order status reaches "Processing" (payment verified).</p>
+                    </div>
+                `;
+                
+                document.getElementById('modalTitle').textContent = 'Download Invoice';
+                document.getElementById('confirmModalAction').classList.add('hidden');
+                document.getElementById('cancelModalAction').textContent = 'Close';
+                
+                const modal = document.getElementById('orderActionModal');
+                modal.classList.remove('hidden');
+                
+                const cancelBtn = document.getElementById('cancelModalAction');
+                cancelBtn.onclick = () => {
+                    modal.classList.add('hidden');
+                    document.getElementById('confirmModalAction').classList.remove('hidden');
+                    document.getElementById('cancelModalAction').textContent = 'Cancel';
+                };
+                
+                return;
+            }
+            
+            showToast('Downloading Invoice', `Invoice for ${selectedOrders.length} order(s) is downloading...`);
+            
+            setTimeout(() => {
+                const ordersList = selectedOrders.join(', ');
+                const invoiceContent = `INVOICE\n\nOrders: ${ordersList}\nDate: ${new Date().toLocaleDateString()}\nGenerated By: Seller Dashboard`;
+                
+                const blob = new Blob([invoiceContent], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `invoice_${selectedOrders.length}_orders_${Date.now()}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showToast('Invoice Downloaded', `Invoice for ${selectedOrders.length} order(s) downloaded successfully.`);
+            }, 1000);
+        }
+
+        function generatePackingSlip() {
+            if (selectedOrders.length === 0) {
+                alert('Please select at least 1 order to generate packing slip');
+                paymentDropdown.style.display = 'none';
+                return;
+            }
+            
+            paymentDropdown.style.display = 'none';
+            
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('packingSlipDate').value = today;
+            document.getElementById('selectedOrdersCount').textContent = selectedOrders.length;
+            
+            document.getElementById('packingSlipModal').classList.remove('hidden');
+        }
+
+        function confirmPackingSlip() {
+            const shippingMethod = document.getElementById('shippingMethod').value;
+            const packingDate = document.getElementById('packingSlipDate').value;
+            
+            if (!packingDate) {
+                alert('Please select a packing date');
+                return;
+            }
+            
+            showToast('Packing Slip Generated', `Packing slip for ${selectedOrders.length} order(s) generated successfully.`);
+            
+            setTimeout(() => {
+                const ordersList = selectedOrders.join(', ');
+                const packingSlipContent = `PACKING SLIP\n\nOrders: ${ordersList}\nPacking Date: ${packingDate}\nShipping Method: ${shippingMethod}\nGenerated By: Seller Dashboard`;
+                
+                const blob = new Blob([packingSlipContent], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `packing_slip_${selectedOrders.length}_orders_${Date.now()}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 500);
+            
+            document.getElementById('packingSlipModal').classList.add('hidden');
+        }
+
+        function generateAutomaticPackingSlip(orderId) {
+            const order = mockData.find(o => o.id === orderId);
+            if (!order) return;
+            
+            if (order.status !== "Packed") {
+                return;
+            }
+            
+            order.packingSlipGenerated = true;
+            order.packingSlipGeneratedAt = new Date().toISOString();
+            
+            addNotification(
+                'packing_slip_generated',
+                'Packing Slip Generated',
+                `Packing slip for order ${orderId} has been automatically generated`,
+                orderId,
+                order.seller,
+                'both'
+            );
+            
+            setTimeout(() => {
+                showToast('Packing Slip Generated', `Packing slip for order ${orderId} has been automatically generated.`);
+            }, 500);
+        }
+
+        function openPaymentVerificationModal() {
+            if (selectedOrders.length !== 1) {
+                alert('Please select exactly 1 order to verify payment');
+                return;
+            }
+            
+            const order = mockData.find(o => o.id === selectedOrders[0]);
+            if (!order) return;
+            
+            if (order.paymentVerified) {
+                alert('Payment for this order has already been verified');
+                return;
+            }
+            
+            if (order.status !== "Accepted") {
+                alert('Only orders with "Accepted" status can have payment verified');
+                return;
+            }
+            
+            document.getElementById('paymentVerificationOrderId').value = order.id;
+            document.getElementById('paymentAmount').value = order.total;
+            
+            const now = new Date();
+            const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+            document.getElementById('paymentDateInput').value = localDateTime;
+            
+            document.getElementById('paymentVerificationModal').classList.remove('hidden');
+        }
+
+        function openPaymentVerificationModalForOrder(orderId) {
+            const order = mockData.find(o => o.id === orderId);
+            if (!order) return;
+            
+            selectedOrders = [orderId];
+            openPaymentVerificationModal();
+        }
+
+        function confirmPaymentVerification() {
+            const orderId = document.getElementById('paymentVerificationOrderId').value;
+            const paymentMethod = document.getElementById('verificationPaymentMethod').value;
+            const paymentReference = document.getElementById('paymentReferenceId').value.trim();
+            const paymentDate = document.getElementById('paymentDateInput').value;
+            
+            if (!paymentReference) {
+                alert('Please enter a payment reference ID');
+                return;
+            }
+            
+            if (!paymentDate) {
+                alert('Please select a payment date');
+                return;
+            }
+            
+            const order = mockData.find(o => o.id === orderId);
+            if (order) {
+                order.paymentVerified = true;
+                order.paymentMethod = paymentMethod;
+                order.paymentReference = paymentReference;
+                order.paymentDate = paymentDate;
+                order.paymentVerifiedBy = 'Admin';
+                
+                const oldStatus = order.status;
+                order.status = 'Processing';
+                
+                generateAutomaticInvoice(orderId);
+                
+                addNotification(
+                    'payment_verified',
+                    'Payment Verified',
+                    `Payment for order ${orderId} has been verified`,
+                    orderId,
+                    order.seller,
+                    'both'
+                );
+                
+                showToast('Payment Verified', `Payment for order ${orderId} has been verified. Invoice generated automatically.`);
+            }
+            
+            document.getElementById('paymentVerificationModal').classList.add('hidden');
+            
+            if (currentRole === 'admin') {
+                renderAdminDashboard();
+                updateAdminStats();
+            } else {
+                renderSellerDashboard();
+            }
+        }
+
+        function confirmOrder(orderId) {
+            const order = mockData.find(o => o.id === orderId);
+            if (!order) return;
+            
+            if (order.status !== "Pending") {
+                alert('Only pending orders can be accepted');
+                return;
+            }
+            
+            order.status = 'Accepted';
+            
+            addNotification(
+                'order_accepted',
+                'Order Accepted',
+                `Order ${orderId} has been accepted by ${order.seller}`,
+                orderId,
+                order.seller,
+                'admin'
+            );
+            
+            addNotification(
+                'order_accepted',
+                'Order Accepted',
+                `Order ${orderId} has been accepted`,
+                orderId,
+                null,
+                'seller'
+            );
+            
+            showToast('Order Accepted', `Order ${orderId} has been accepted. Awaiting payment verification.`);
+            
+            if (currentRole === 'seller') {
+                renderSellerDashboard();
+            } else {
+                renderAdminDashboard();
+            }
+        }
+
+        function updateOrderStatus(orderId) {
+            const order = mockData.find(o => o.id === orderId);
+            if (!order) return;
+            
+            if (order.status === "Accepted" && !order.paymentVerified) {
+                alert('Cannot process order. Payment has not been verified yet.');
+                return;
+            }
+            
+            const currentIndex = statusFlow.indexOf(order.status);
+            if (currentIndex < statusFlow.length - 1) {
+                const oldStatus = order.status;
+                order.status = statusFlow[currentIndex + 1];
+                
+                if (order.status === "Packed" && oldStatus !== "Packed") {
+                    generateAutomaticPackingSlip(orderId);
+                }
+                
+                if (order.status === "Shipped" || order.status === "Delivered") {
+                    addNotification(
+                        'status_updated',
+                        'Status Updated',
+                        `Order ${orderId} status updated to ${order.status}`,
+                        orderId,
+                        null,
+                        'seller'
+                    );
+                }
+                
+                if (order.isDelayed && order.sla !== 'normal') {
+                    addNotification(
+                        'sla_breached',
+                        'SLA Breached',
+                        `Order ${orderId} has exceeded ${order.sla}-hour SLA`,
+                        orderId,
+                        order.seller,
+                        'admin'
+                    );
+                }
+                
+                showToast('Status Updated', `Order ${orderId} status updated to ${order.status}`);
+                
+                if (currentRole === 'seller') {
+                    renderSellerDashboard();
+                } else {
+                    renderAdminDashboard();
+                    updateAdminStats();
+                }
+            }
+        }
+
+        function generateAutomaticInvoice(orderId) {
+            const order = mockData.find(o => o.id === orderId);
+            if (!order) return;
+            
+            if (!order.paymentVerified) {
+                return;
+            }
+            
+            order.invoiceAutoGenerated = true;
+            order.invoiceGeneratedAt = new Date().toISOString();
+            
+            addNotification(
+                'invoice_generated',
+                'Invoice Generated',
+                `Invoice for order ${orderId} has been automatically generated`,
+                orderId,
+                order.seller,
+                'both'
+            );
+            
+            setTimeout(() => {
+                showToast('Invoice Generated', `Invoice for order ${orderId} has been automatically generated after payment verification.`);
+            }, 500);
+        }
+
+        function showRejectionModal(orderId) {
+            currentOrderForAction = orderId;
+            document.getElementById('rejectionModal').classList.remove('hidden');
+        }
+
+        function confirmReject() {
+            const reason = document.getElementById('rejectionReason').value.trim();
+            if (!reason) {
+                alert('Please provide a rejection reason');
+                return;
+            }
+            
+            const order = mockData.find(o => o.id === currentOrderForAction);
+            if (order) {
+                order.status = 'Rejected';
+                order.notes = order.notes ? `${order.notes} [REJECTED: ${reason}]` : `[REJECTED: ${reason}]`;
+                
+                addNotification(
+                    'order_rejected',
+                    'Order Rejected',
+                    `Order ${currentOrderForAction} has been rejected by ${order.seller} - Reason: ${reason}`,
+                    currentOrderForAction,
+                    order.seller,
+                    'admin'
+                );
+                
+                showToast('Order Rejected', `Order ${currentOrderForAction} rejected. Reason: ${reason}`);
+            }
+            
+            document.getElementById('rejectionModal').classList.add('hidden');
+            document.getElementById('rejectionReason').value = '';
+            
+            if (currentRole === 'seller') {
+                renderSellerDashboard();
+            }
+        }
+
+        function mergeOrders() {
+            if (selectedOrders.length < 2) {
+                alert('Please select at least 2 orders to merge');
+                return;
+            }
+            
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <p class="mb-4" style="color:#B0D0FF;">You are about to merge ${selectedOrders.length} orders. This action cannot be undone.</p>
+                <p class="font-medium mb-2" style="color:white;">Selected Orders:</p>
+                <div class="space-y-2 mb-6">
+                    ${selectedOrders.map(id => `<p class="text-sm" style="color:#B0D0FF;">• ${id}</p>`).join('')}
+                </div>
+                <div class="p-4 rounded-xl" style="background:rgba(28,200,200,0.1); border:1px solid #1CC8C8;">
+                    <p class="text-sm" style="color:#C7D9FF;"><i class="fas fa-info-circle mr-2" style="color:#1CC8C8;"></i>Merged orders will be combined into a single shipment with combined items.</p>
+                </div>
+            `;
+            
+            document.getElementById('modalTitle').textContent = 'Merge Orders';
+            document.getElementById('confirmModalAction').textContent = 'Confirm Merge';
+            
+            const modal = document.getElementById('orderActionModal');
+            modal.classList.remove('hidden');
+            
+            const confirmBtn = document.getElementById('confirmModalAction');
+            const oldHandler = confirmBtn.onclick;
+            confirmBtn.onclick = () => {
+                showToast('Orders Merged', `${selectedOrders.length} orders merged successfully`);
+                modal.classList.add('hidden');
+                selectedOrders = [];
+                document.getElementById('selectAllOrders').checked = false;
+                renderSellerDashboard();
+                confirmBtn.onclick = oldHandler;
+            };
+        }
+
+        function splitOrder() {
+            if (selectedOrders.length !== 1) {
+                alert('Please select exactly 1 order to split');
+                return;
+            }
+            
+            const order = mockData.find(o => o.id === selectedOrders[0]);
+            if (!order) return;
+            
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <p class="mb-4" style="color:#B0D0FF;">Split Order ${order.id} with ${order.items.length} item(s):</p>
+                <div class="space-y-3 mb-6">
+                    ${order.items.map((item, index) => `
+                        <div class="flex items-center justify-between p-3 border rounded-xl" style="border-color:rgba(255,47,163,0.2);">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="item-${index}" class="split-item-checkbox mr-3 rounded" style="border-color:#FF4CC9;" checked>
+                                <div>
+                                    <p class="font-medium" style="color:white;">${item.sku} (${item.size})</p>
+                                    <p class="text-sm" style="color:#B0D0FF;">Color: ${item.color} • Qty: ${item.quantity}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="p-4 rounded-xl" style="background:rgba(28,200,200,0.1); border:1px solid #1CC8C8;">
+                    <p class="text-sm" style="color:#C7D9FF;"><i class="fas fa-info-circle mr-2" style="color:#1CC8C8;"></i>Selected items will be moved to a new order.</p>
+                </div>
+            `;
+            
+            document.getElementById('modalTitle').textContent = 'Split Order';
+            document.getElementById('confirmModalAction').textContent = 'Confirm Split';
+            
+            const modal = document.getElementById('orderActionModal');
+            modal.classList.remove('hidden');
+            
+            const confirmBtn = document.getElementById('confirmModalAction');
+            const oldHandler = confirmBtn.onclick;
+            confirmBtn.onclick = () => {
+                showToast('Order Split', `Order ${order.id} split successfully`);
+                modal.classList.add('hidden');
+                selectedOrders = [];
+                document.getElementById('selectAllOrders').checked = false;
+                renderSellerDashboard();
+                confirmBtn.onclick = oldHandler;
+            };
+        }
+
+        function runQCCheck() {
+            const qcOrders = mockData.filter(order => 
+                order.status === 'Processing' || order.status === 'QC Done'
+            );
+            
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <div class="text-center py-8">
+                    <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style="background:rgba(182,109,255,0.2); border:1px solid #B66DFF;">
+                        <i class="fas fa-check-double text-2xl" style="color:#B66DFF;"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2" style="color:white;">Running QC Check</h4>
+                    <p class="mb-6" style="color:#B0D0FF;">Checking ${qcOrders.length} orders for anomalies...</p>
+                    
+                    <div class="w-full rounded-full h-2 mb-8" style="background:rgba(255,255,255,0.1);">
+                        <div class="h-2 rounded-full animate-pulse" style="width: 70%; background:linear-gradient(90deg, #FF2FA3, #B66DFF);"></div>
+                    </div>
+                    
+                    <div id="qcResults" class="hidden">
+                        <div class="p-4 rounded-xl" style="background:rgba(28,200,200,0.1); border:1px solid #1CC8C8;">
+                            <h5 class="font-bold mb-2" style="color:white;">QC Results:</h5>
+                            <ul class="space-y-1 text-sm" style="color:#B0D0FF;">
+                                <li><i class="fas fa-check mr-2" style="color:#1CC8C8;"></i> ${qcOrders.length - 2} orders passed QC</li>
+                                <li><i class="fas fa-exclamation-triangle mr-2" style="color:#FFB86B;"></i> 1 order has measurement discrepancy</li>
+                                <li><i class="fas fa-exclamation-triangle mr-2" style="color:#FFB86B;"></i> 1 order has packaging issue</li>
+                            </ul>
+                            <p class="text-sm mt-3" style="color:#9CA3AF;">Anomaly detection completed successfully.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modalTitle').textContent = 'Quality Check';
+            document.getElementById('confirmModalAction').classList.add('hidden');
+            document.getElementById('cancelModalAction').textContent = 'Close';
+            
+            const modal = document.getElementById('orderActionModal');
+            modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                document.getElementById('qcResults').classList.remove('hidden');
+            }, 2000);
+            
+            const cancelBtn = document.getElementById('cancelModalAction');
+            cancelBtn.onclick = () => {
+                modal.classList.add('hidden');
+                document.getElementById('confirmModalAction').classList.remove('hidden');
+                document.getElementById('cancelModalAction').textContent = 'Cancel';
+            };
+        }
+
+        function openOverrideModal() {
+            if (selectedOrders.length !== 1) {
+                alert('Please select exactly 1 order to override status');
+                return;
+            }
+            
+            const order = mockData.find(o => o.id === selectedOrders[0]);
+            if (!order) return;
+            
+            document.getElementById('overrideOrderId').value = order.id;
+            document.getElementById('newStatus').value = order.status;
+            document.getElementById('overrideReason').value = '';
+            
+            document.getElementById('overrideModal').classList.remove('hidden');
+        }
+
+        function confirmOverride() {
+            const orderId = document.getElementById('overrideOrderId').value;
+            const newStatus = document.getElementById('newStatus').value;
+            const reason = document.getElementById('overrideReason').value.trim();
+            
+            if (!reason) {
+                alert('Please provide a reason for the override');
+                return;
+            }
+            
+            const order = mockData.find(o => o.id === orderId);
+            if (order) {
+                const oldStatus = order.status;
+                order.status = newStatus;
+                
+                if (order.status === "Processing" && oldStatus !== "Processing") {
+                    generateAutomaticInvoice(orderId);
+                }
+                
+                if (order.status === "Packed" && oldStatus !== "Packed") {
+                    generateAutomaticPackingSlip(orderId);
+                }
+                
+                order.notes = order.notes ? `${order.notes} [OVERRIDE: ${oldStatus} → ${newStatus} - ${reason}]` : `[OVERRIDE: ${oldStatus} → ${newStatus} - ${reason}]`;
+                
+                addNotification(
+                    'status_updated',
+                    'Status Overridden',
+                    `Order ${orderId} status changed from ${oldStatus} to ${newStatus}`,
+                    orderId,
+                    order.seller,
+                    'both'
+                );
+                
+                showToast('Status Overridden', `Order ${orderId} status changed from ${oldStatus} to ${newStatus}`);
+            }
+            
+            document.getElementById('overrideModal').classList.add('hidden');
+            
+            if (currentRole === 'admin') {
+                renderAdminDashboard();
+                updateAdminStats();
+            } else {
+                renderSellerDashboard();
+            }
+        }
+
+        function formatPaymentMethod(method) {
+            const methods = {
+                'bank_transfer': 'Bank Transfer',
+                'credit_card': 'Credit Card',
+                'paypal': 'PayPal',
+                'digital_wallet': 'Digital Wallet',
+                'cash_on_delivery': 'Cash on Delivery'
+            };
+            return methods[method] || method;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        function updateSellerStats() {
+            const total = mockData.length;
+            const pending = mockData.filter(o => o.status === 'Pending').length;
+            const toShip = mockData.filter(o => ['Processing', 'QC Done', 'Packed'].includes(o.status)).length;
+            const delayed = mockData.filter(o => o.isDelayed).length;
+            
+            sellerTotalOrders.textContent = total;
+            sellerPendingOrders.textContent = pending;
+            sellerToShipOrders.textContent = toShip;
+            sellerDelayedOrders.textContent = delayed;
+        }
+
+        function updateAdminStats() {
+            const total = mockData.length;
+            const slaBreached = mockData.filter(o => o.sla !== 'normal').length;
+            const highRisk = mockData.filter(o => o.risk === 'high').length;
+            const slaOk = mockData.filter(o => o.sla === 'normal').length;
+            
+            adminTotalOrders.textContent = total;
+            adminSlaBreached.textContent = slaBreached;
+            adminHighRisk.textContent = highRisk;
+            adminSlaCompliance.textContent = `${Math.round((slaOk / total) * 100)}%`;
+        }
+
+        function generateInsights() {
+            categoryInsight.innerHTML = `
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm" style="color:#B0D0FF;">Men's Fashion</span>
+                    <span class="text-sm font-bold" style="color:white;">45%</span>
+                </div>
+                <div class="w-full rounded-full h-2 mb-3" style="background:rgba(255,255,255,0.1);">
+                    <div class="h-2 rounded-full" style="width: 45%; background:linear-gradient(90deg, #FF2FA3, #B66DFF);"></div>
+                </div>
+                
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm" style="color:#B0D0FF;">Women's Fashion</span>
+                    <span class="text-sm font-bold" style="color:white;">35%</span>
+                </div>
+                <div class="w-full rounded-full h-2 mb-3" style="background:rgba(255,255,255,0.1);">
+                    <div class="h-2 rounded-full" style="width: 35%; background:linear-gradient(90deg, #FF4CC9, #B66DFF);"></div>
+                </div>
+                
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm" style="color:#B0D0FF;">Accessories</span>
+                    <span class="text-sm font-bold" style="color:white;">15%</span>
+                </div>
+                <div class="w-full rounded-full h-2 mb-3" style="background:rgba(255,255,255,0.1);">
+                    <div class="h-2 rounded-full" style="width: 15%; background:linear-gradient(90deg, #1CC8C8, #B66DFF);"></div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <span class="text-sm" style="color:#B0D0FF;">Footwear</span>
+                    <span class="text-sm font-bold" style="color:white;">5%</span>
+                </div>
+                <div class="w-full rounded-full h-2" style="background:rgba(255,255,255,0.1);">
+                    <div class="h-2 rounded-full" style="width: 5%; background:linear-gradient(90deg, #FFB86B, #FF4CC9);"></div>
+                </div>
+            `;
+            
+            sellerInsight.innerHTML = `
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3" style="background:rgba(255,47,163,0.3); border:1px solid #FF2FA3;">
+                            <span class="text-white text-xs font-bold">A</span>
+                        </div>
+                        <span class="text-sm font-medium" style="color:white;">Seller A</span>
+                    </div>
+                    <span class="text-sm font-bold" style="color:#1CC8C8;">+12%</span>
+                </div>
+                
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3" style="background:rgba(28,200,200,0.3); border:1px solid #1CC8C8;">
+                            <span class="text-white text-xs font-bold">B</span>
+                        </div>
+                        <span class="text-sm font-medium" style="color:white;">Seller B</span>
+                    </div>
+                    <span class="text-sm font-bold" style="color:#FF8AAE;">-3%</span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3" style="background:rgba(182,109,255,0.3); border:1px solid #B66DFF;">
+                            <span class="text-white text-xs font-bold">C</span>
+                        </div>
+                        <span class="text-sm font-medium" style="color:white;">Seller C</span>
+                    </div>
+                    <span class="text-sm font-bold" style="color:#1CC8C8;">+8%</span>
+                </div>
+                
+                <div class="mt-4 pt-4 border-t" style="border-color:rgba(255,47,163,0.2);">
+                    <p class="text-xs" style="color:#9CA3AF;">Avg fulfillment time: <span class="font-bold" style="color:white;">2.3 days</span></p>
+                </div>
+            `;
+            
+            bottleneckInsight.innerHTML = `
+                <div class="mb-3">
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm" style="color:#B0D0FF;">QC Process</span>
+                        <span class="text-sm font-bold" style="color:white;">12h avg.</span>
+                    </div>
+                    <div class="w-full rounded-full h-2" style="background:rgba(255,255,255,0.1);">
+                        <div class="h-2 rounded-full" style="width: 70%; background:linear-gradient(90deg, #FF2FA3, #FF8AAE);"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm" style="color:#B0D0FF;">Packaging</span>
+                        <span class="text-sm font-bold" style="color:white;">8h avg.</span>
+                    </div>
+                    <div class="w-full rounded-full h-2" style="background:rgba(255,255,255,0.1);">
+                        <div class="h-2 rounded-full" style="width: 50%; background:linear-gradient(90deg, #FFB86B, #FF8AAE);"></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm" style="color:#B0D0FF;">Partner Handoff</span>
+                        <span class="text-sm font-bold" style="color:white;">6h avg.</span>
+                    </div>
+                    <div class="w-full rounded-full h-2" style="background:rgba(255,255,255,0.1);">
+                        <div class="h-2 rounded-full" style="width: 40%; background:linear-gradient(90deg, #1CC8C8, #B66DFF);"></div>
+                    </div>
+                </div>
+                
+                <div class="mt-4 pt-4 border-t" style="border-color:rgba(255,47,163,0.2);">
+                    <p class="text-xs" style="color:#9CA3AF;">Biggest bottleneck: <span class="font-bold" style="color:#FF8AAE;">QC Process</span> (40% of delays)</p>
+                </div>
+            `;
+        }
+
+        function showToast(title, message) {
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+            
+            const toast = document.getElementById('toast');
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        function handleRefresh() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            refreshBtn.style.transform = 'rotate(360deg)';
+            refreshBtn.style.transition = 'transform 0.5s ease';
+            
+            setTimeout(() => {
+                refreshBtn.style.transform = 'rotate(0deg)';
+            }, 500);
+            
+            showToast('Dashboard Refreshed', 'All data has been refreshed successfully');
+            
+            if (currentRole === 'seller') {
+                renderSellerDashboard();
+            } else {
+                renderAdminDashboard();
+            }
+        }
+
+        if ("Notification" in window) {
+            if (Notification.permission === "default") {
+                Notification.requestPermission();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+    <h1>Orders Dashboard</h1>
+    <ul id="ordersList" style="border:1px solid red; padding:10px;"></ul> 
+    <script type="module">
+  // 1️⃣ Import everything from Firebase v10
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  // 2️⃣ Your Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyCFAure4d59wjPu-i8iFC0uLTXFTkU7bMo",
+    authDomain: "order-dashboard-11eb8.firebaseapp.com",
+    projectId: "order-dashboard-11eb8",
+    storageBucket: "order-dashboard-11eb8.firebasestorage.app",
+    messagingSenderId: "819878185141",
+    appId: "1:819878185141:web:5bcedfe8549fdbc46916fc",
+    measurementId: "G-Q43KXCC97R"
+  };
+
+  // 3️⃣ Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app); // THIS is the missing part
+
+  async function loadData() {
+  const querySnapshot = await getDocs(collection(db, "orders"));
+  const ordersList = document.getElementById("ordersList"); // link to HTML
+  ordersList.innerHTML = ""; // clear previous items
+
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+
+    const li = document.createElement("li");
+    li.textContent = `Name: ${data.name}, Item: ${data.item}, Qty: ${data.quantity}`;
+    ordersList.appendChild(li); // add to page
+  });
+}
+
+loadData(); // run it
+
+</script>
+</body>
+</html>
